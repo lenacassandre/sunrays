@@ -1,8 +1,13 @@
 {
     "name": "sunrays",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
-    "main": "src/index.ts",
+    "main": "lib/index.js",
+	"module": "./lib/index.js",
+	"types": "./lib/index.d.ts",
+	"files": [
+		"lib/"
+	],
     "scripts": {
         "watch-ts": "tsc -w -p .",
         "watch": "rm -rf dist && npm run watch-ts",
