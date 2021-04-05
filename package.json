@@ -13,7 +13,7 @@
         "watch": "rm -rf dist && npm run watch-ts",
         "watch-windows": "del /s /F /Q dist && npm run watch-ts",
         "test": "echo \"Error: no test specified\" && exit 1",
-        "commit": "yarn tsc && git add . && git cz",
+        "commit": "tsc -p . && git add . && git cz",
         "release": "standard-version && git push --follow-tags origin main && npm publish"
     },
     "repository": {
