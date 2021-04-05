@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.10](https://github.com/lenacassandre/sunrays/compare/v0.1.9...v0.1.10) (2021-04-05)
+
+
+### Bug Fixes
+
+* **factorymethods:** document._id: string => mongoose.Types.ObjectId ([1c36526](https://github.com/lenacassandre/sunrays/commit/1c36526a90922cd85485b147676769b37554d90e))
+
 ### [0.1.9](https://github.com/lenacassandre/sunrays/compare/v0.1.8...v0.1.9) (2021-04-05)
 
 
