@@ -34,7 +34,7 @@ class Automaton<UserType extends User> {
 
 	constructor(dataBaseURL: string, port: number) {
 		log.lb();
-		log.info("🤖 AUTOMATON 🤖");
+		log.info("☀️ SUNRAYS ☀️");
 		log.lb();
 
 		log.info("Loading environnment variables.");
