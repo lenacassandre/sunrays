@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.8](https://github.com/lenacassandre/sunrays/compare/v0.1.7...v0.1.8) (2021-04-05)
+
+
+### Bug Fixes
+
+* **document.class:** removed extends from mongoose document ([6b7afe2](https://github.com/lenacassandre/sunrays/commit/6b7afe25c04991b7736cc188d9e1f8b3af92ee0b))
+
 ### [0.1.7](https://github.com/lenacassandre/sunrays/compare/v0.1.6...v0.1.7) (2021-04-05)
 
 ### [0.1.6](https://github.com/lenacassandre/sunrays/compare/v0.1.5...v0.1.6) (2021-04-05)
