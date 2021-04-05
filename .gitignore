@@ -108,3 +108,5 @@ dist
 
 #Export
 lib
+
+.DS_Store
