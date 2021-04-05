@@ -1,7 +1,7 @@
 import {Document as MongooseDocument} from "mongoose"
 
 // La classe dont doivent hériter tous les documents
-export default class Document extends MongooseDocument {
+export default class Document {
     _id: string;
     __v: number;
     color?: string;
@@ -12,8 +12,6 @@ export default class Document extends MongooseDocument {
     updated_at: Date;
 
     constructor(doc: Document) {
-        super(doc);
-
         this._id = doc._id;
         this.__v = doc.__v;
         this.color = doc.color;
