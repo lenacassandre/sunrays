@@ -1,6 +1,6 @@
 {
     "name": "sunrays",
-    "version": "0.1.5",
+    "version": "0.1.6",
     "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
     "main": "lib/index.js",
     "module": "./lib/index.js",
@@ -14,7 +14,8 @@
         "watch-windows": "del /s /F /Q dist && npm run watch-ts",
         "test": "echo \"Error: no test specified\" && exit 1",
         "commit": "tsc -p . && git add . && git cz",
-        "release": "standard-version && git push --follow-tags origin main && sleep 5 && npm publish"
+        "release": "standard-version && git push --follow-tags origin main",
+        "publish": "tsc -p . && npm publish"
     },
     "repository": {
         "type": "git",
