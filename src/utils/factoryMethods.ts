@@ -103,9 +103,10 @@ export default function controlFactory<UserType extends User, DocType extends Do
 							}
 
 							const objectResult = {...newDocObject, _oldId : newDocObject._id}
-							objectResult._id = String(savedDocument._id); // Bug Typescript/mongoose ? Le type de _id est bizarre.
+							//@ts-ignore
+							objectResult._id = savedDocument._id; // Bug Typescript/mongoose ? Le type de _id est bizarre.
 
-
+							//@ts-ignore
 							newDocsObjects.push(objectResult); // On ajoute la relation entre l'ancien ID et le nouveau au tableau.
 						}
 					}
@@ -225,7 +226,7 @@ export default function controlFactory<UserType extends User, DocType extends Do
 			}
 
 			if(deletedDocs.length > 0) {
-				res.resolve({ids: deletedDocs.map(doc => doc._id)})
+				res.resolve({ids: deletedDocs.map(doc => String(doc._id))})
 				res.dispatch<DocType>(modelDeclaration.name, "delete", deletedDocs); // On envoie le résultat aux autres clients
 			} else {
 				res.reject("Non autorisé.")

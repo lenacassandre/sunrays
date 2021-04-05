@@ -1,8 +1,9 @@
-import {Document as MongooseDocument} from "mongoose"
+import mongoose, {Document as MongooseDocument} from "mongoose"
+import ObjectId = mongoose.Types.ObjectId;
 
 // La classe dont doivent hériter tous les documents
 export default class Document {
-    _id: string;
+    _id: ObjectId;
     __v: number;
     color?: string;
     order?: number;
