@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.11](https://github.com/lenacassandre/sunrays/compare/v0.1.10...v0.1.11) (2021-04-06)
+
+
+### Bug Fixes
+
+* **jwt:** throw an error if process.env.SECRET is undefiend ([daedebe](https://github.com/lenacassandre/sunrays/commit/daedebe4059ee8449cc736d3b59b83389a36b34e))
+
 ### [0.1.10](https://github.com/lenacassandre/sunrays/compare/v0.1.9...v0.1.10) (2021-04-05)
 
 
