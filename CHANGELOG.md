@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.1.12](https://github.com/lenacassandre/sunrays/compare/v0.1.11...v0.1.12) (2021-04-06)
+
+
+### Bug Fixes
+
+* **cors:** cors ([b4185ad](https://github.com/lenacassandre/sunrays/commit/b4185ad4e7a7f74ddc705854e48713e62db2938a))
+
 ### [0.1.11](https://github.com/lenacassandre/sunrays/compare/v0.1.10...v0.1.11) (2021-04-06)
 
 
