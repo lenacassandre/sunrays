@@ -10,6 +10,8 @@ export const jwt = {
      * @param userName
      */
 	sign: (userName: string): string => {
+		if(!process.env.SECRET) throw new Error("process.env.SECRET is undefined")
+
 		const token = jsonwebtoken.sign(userName, <Secret>process.env.SECRET);
 		return token;
 	},
@@ -18,6 +20,8 @@ export const jwt = {
      * @param token
      */
 	verify: (token: string): string => {
+		if(!process.env.SECRET) throw new Error("process.env.SECRET is undefined")
+
 		const userName = <string>jsonwebtoken.verify(token, <Secret>process.env.SECRET);
 		return userName;
 	}
