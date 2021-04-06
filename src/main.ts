@@ -14,6 +14,9 @@ import checkErrorType from './utils/checkErrorType'
 import dispatchChanges from "./utils/dispatchChanges";
 import Document from "./classes/Document.class"
 
+
+import cors from 'cors';
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const options = {
@@ -63,6 +66,9 @@ class Automaton<UserType extends User> {
 
 		log.info("Init socket server.");
 		this.app = expressServer();
+		this.app.use(cors())
+		this.app.options("*", cors)
+
 		this.server = http.createServer(this.app);
 		this.io = new IOServer(this.server, options);
 
