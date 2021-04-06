@@ -70,17 +70,13 @@ class Automaton<UserType extends User> {
 		this.app.options("*", cors)
 
 		this.server = http.createServer(this.app);
-		this.io = new IOServer(this.server, options);
-
-		log.info("Init socket log middleware.");
-		this.io.use((socket: socketIo.Socket, next) => { // Init socket log middleware.
-			//log.debug("CONNECTED", socket.connected); // BOOLEAN
-			//log.debug("DISONNECTED", socket.disconnected); // BOOLEAN
-			//log.debug("HANDSHAKE", socket.handshake); // HEADERS, SUPER UTILE
-			//log.debug("ID", socket.id); // UNIQUE STRING
-			//log.debug("ROOMS", socket.rooms); // OBJECT
-			next();
+		this.io = new IOServer(this.server, {
+			cors: {
+				origin: ["https://dev.gcttu.synexie.fr", "https://gcttu.synexie.fr"],
+				methods: ["GET", "POST"]
+			}
 		});
+
 
 		log.info("Init socket errors middleware.");
 		this.io.on("error", (reason: any) => { // Init socket errors middleware.
