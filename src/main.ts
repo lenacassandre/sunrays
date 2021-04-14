@@ -35,7 +35,7 @@ class Automaton<UserType extends User> {
 	controllers: {[route: string] : Method<UserType, any, any>} = {}; // Liste des routes/controllers
 	factories: ModelDeclaration<UserType, any>[] = []; // Liste des factories/modèles
 
-	constructor(dataBaseURL: string, port: number) {
+	constructor(dataBaseURL: string, port: number, config?: Partial<socketIo.ServerOptions>) {
 		log.lb();
 		log.info("☀️ SUNRAYS ☀️");
 		log.lb();
@@ -70,12 +70,7 @@ class Automaton<UserType extends User> {
 		this.app.options("*", cors)
 
 		this.server = http.createServer(this.app);
-		this.io = new IOServer(this.server, {
-			cors: {
-				origin: ["https://dev.gcttu.synexie.fr", "https://gcttu.synexie.fr"],
-				methods: ["GET", "POST"]
-			}
-		});
+		this.io = new IOServer(this.server, config || {});
 
 
 		log.info("Init socket errors middleware.");
