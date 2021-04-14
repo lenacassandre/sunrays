@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.17](https://github.com/lenacassandre/sunrays/compare/v0.0.16...v0.0.17) (2021-04-14)
+
+
+### Bug Fixes
+
+* **login:** error ([8e7785b](https://github.com/lenacassandre/sunrays/commit/8e7785bbfeeb596e04d94548c2e9f643aa574b82))
+
 ### [0.0.16](https://github.com/lenacassandre/sunrays/compare/v0.0.15...v0.0.16) (2021-04-14)
 
 
