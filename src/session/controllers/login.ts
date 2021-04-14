@@ -45,7 +45,8 @@ export default async function login<UserType extends User>(
 		if (typeof e === "string") {
 			return res.reject(e);
 		} else {
-			return res.reject("Erreur de connexion. " + JSON.stringify(e));
+			log.error(e)
+			return res.reject("Erreur de connexion.");
 		}
 	}
 }
