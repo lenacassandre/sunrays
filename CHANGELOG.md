@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.0.14](https://github.com/lenacassandre/sunrays/compare/v0.0.13...v0.0.14) (2021-04-14)
+
+
+### Features
+
+* **config parameter for automaton class:** config parameter ([b9f4bec](https://github.com/lenacassandre/sunrays/commit/b9f4bec903a2d66c942a721f87aa5da06a9da73c))
+
 ### [0.1.12](https://github.com/lenacassandre/sunrays/compare/v0.1.11...v0.1.12) (2021-04-06)
 
 
