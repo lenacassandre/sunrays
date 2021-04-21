@@ -27,7 +27,7 @@ const options = {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-class Automaton<UserType extends User> {
+class Sun<UserType extends User> {
 	server: http.Server; // HTTP node server
 	app: Express; // Express server
 	io: IOServer; // Socket IO server
@@ -37,7 +37,7 @@ class Automaton<UserType extends User> {
 
 	constructor(dataBaseURL: string, port: number, config?: Partial<socketIo.ServerOptions>) {
 		log.lb();
-		log.info("☀️ SUNRAYS ☀️");
+		log.info("✨☀️ SUNRAYS ☀️✨");
 		log.lb();
 
 		log.info("Loading environnment variables.");
@@ -232,4 +232,4 @@ class Automaton<UserType extends User> {
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-export default Automaton;
+export default Sun;
