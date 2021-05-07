@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.2](https://github.com/lenacassandre/sunrays/compare/v0.2.1...v0.2.2) (2021-05-07)
+
+
+### Bug Fixes
+
+* **orga:** orga filter on conrtollres ([cda07ad](https://github.com/lenacassandre/sunrays/commit/cda07ad573f00c72a826bb31443461342de979cc))
+
 ### [0.2.1](https://github.com/lenacassandre/sunrays/compare/v0.1.0...v0.2.1) (2021-05-07)
 
 ## [0.1.0](https://github.com/lenacassandre/sunrays/compare/v0.0.17...v0.1.0) (2021-05-07)
