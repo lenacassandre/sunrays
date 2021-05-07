@@ -32,7 +32,7 @@ export default class Document {
 export function processSchemaDeclaration(schema: {[key: string]: any}) {
     return {
         ...schema,
-        organizations: [ObjectId],
+        organizations: {type: [ObjectId], default: [], required: true},
         color: String,
         order: Number,
         dev: Boolean,
