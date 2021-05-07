@@ -10,6 +10,34 @@ import SocketConnection from "./classes/SocketConnection.class";
 //////////////////////////////////////////////////////////////////////////////////////////:
 //////////////////////////////////////////////////////////////////////////////////////////:
 
+export declare type RepoControllerType = "post" | "patch" | "remove" | "archive" | "destroy" | "unarchive" | "restore" | "getAll" | "getArchives" | "getRemoved"
+
+export declare type RepoControllersArgumentsTypes<DocType extends Document> = {
+	getAll: undefined,
+	getArchives: undefined,
+	getRemoved: undefined,
+	archive: string[]
+	unarchive: string[]
+	remove: string[]
+	restore: string[]
+	destroy: string[]
+	patch: (Partial<DocType> & {_id: string})[]
+	post: (Partial<DocType> & {_id: string})[]
+}
+
+export declare type RepoControllersReturnTypes<DocType extends Document> = {
+	getAll: (Partial<DocType> & {_id: string})[],
+	getArchives: (Partial<DocType> & {_id: string})[],
+	getRemoved: (Partial<DocType> & {_id: string})[],
+	archive: string[],
+	unarchive: string[],
+	remove: string[],
+	restore: string[],
+	destroy: string[],
+	patch: (Partial<DocType> & {_id: string})[],
+	post: (Partial<DocType> & {_oldId: string, _id: string})[],
+}
+
 // Delete a property from a type (used to delete password from user, to send it to the client)
 export declare type Omit<T, K extends keyof T> = Pick<T, Exclude<keyof T, K>>
 
@@ -36,6 +64,7 @@ export declare type Request<UserType extends User, RequestData> = {
 	data: RequestData
 }
 
+
 /**
  * La réponse se fait sous forme de promesse.
  * Appeler resolve pour accepter la requête, ou reject pour la refuser.
@@ -43,7 +72,11 @@ export declare type Request<UserType extends User, RequestData> = {
 export declare type Response<ResponseData, DocType = any> = {
 	resolve: (result: ResponseData) => void;
 	reject: (result: string, errorData?: any) => void;
-	dispatch: <DocType>(factoryName: string, type: "post" | "patch" | "delete", data: Partial<DocType>[]) => void;
+	dispatch: <DType extends Document, Type extends RepoControllerType>(
+		repoName: string,
+		type: Type,
+		data: RepoControllersReturnTypes<DType>[Type]
+	) => void;
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -51,6 +84,8 @@ export declare type Response<ResponseData, DocType = any> = {
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
+
+export declare type PermissionType = "request" | "post" | "patch" | "remove" | "archive" | "destroy";
 
 /**
  * Les permissions des utilisateurs sur une factory.
@@ -62,21 +97,21 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @returns Un filtre de requête mongoose. null si la requête est refusée. Voir la doc : https://mongoosejs.com/docs/tutorials/query_casting.html
 	 */
-	requestFilter : (user: SafeUser<UserType> | null) => Promise<FilterQuery<DocType>>;
+	requestFilter?: (user: SafeUser<UserType> | null) => Promise<FilterQuery<DocType>>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•trice ait bien le droit d'accéder à un document demandé.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document mongoose demandé.
 	 * @returns Le document, ou une partie du document, sous forme d'objet pur javascript. C'est ce qui sera envoyé au client. null si la requête est refusée.
 	 */
-	request: (user: SafeUser<UserType> | null, doc: DocType) => Promise<Partial<DocType> | null>;
+	request?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<Partial<DocType> | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de créer le nouveau document demandé.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite créer.
 	 * @returns Le document, ou une partie du document, sous forme d'objet pur javascript. C'est ce qui sera enregistré sur le serveur. null si la requête est refusée.
 	 */
-	post: (user: SafeUser<UserType> | null, doc: (Partial<DocType> & {_id: string})) => Promise<Partial<DocType> | null>;
+	post?: (user: SafeUser<UserType> | null, doc: (Partial<DocType> & {_id: string})) => Promise<Partial<DocType> | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de modifier les propriétés données d'un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
@@ -84,14 +119,28 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 * @param patch Les modifications que l'utilisateur•trice souhaite apporter au document.
 	 * @returns Les modifications qui sont acceptées. null si la requête est refusée.
 	 */
-	patch: (user: SafeUser<UserType> | null, currentDoc: DocType, patch: (Partial<DocType> & {_id: string})) => Promise<Partial<DocType> | null>;
+	patch?: (user: SafeUser<UserType> | null, currentDoc: DocType, patch: (Partial<DocType> & {_id: string})) => Promise<Partial<DocType> | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de supprimer un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
 	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
 	 */
-	delete: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
+	remove?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
+	/**
+	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit d'archiver un document donné.
+	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
+	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
+	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
+	 */
+	archive?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
+	/**
+	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de détruire définitivement un document donné.
+	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
+	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
+	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
+	 */
+	destroy?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -99,14 +148,6 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////
-
-// Autres
-// Actions utilisées par le reducer
-export declare type AsyncAction = {
-	DO: string;
-	DONE: string;
-	FAIL: string;
-}
 
 export declare type ModelDeclaration<UserType extends User, DocType extends Document> = {
 	name: string;

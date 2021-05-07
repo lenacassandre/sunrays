@@ -1,5 +1,7 @@
 import JSONcolorizer from "json-colorizer";
 import path from "path";
+import { SocketConnection } from "..";
+import User from "../classes/User.class";
 
 const appDir = path.dirname(require.main?.filename || "");
 
@@ -175,15 +177,15 @@ type Request = {
 	id: string;
 	date:number;
 	route: string;
-	connectionShortId: string;
+	connection: SocketConnection<User>;
 }
 
 const pendingRequests: Request[] = []
 
-export function request(route: string, data: any, connectionShortId: string): string {
+export function request(route: string, data: any, connection: SocketConnection<User>): string {
 	const dataSize = getDataSize(data);
 
-	beeMessage(`\x1b[90m<--\x1b[37m ${ellipsis(route, 15)}\x1b[0m ${connectionShortId ? ` 🦊\x1b[90m ${connectionShortId}\x1b[0m` : ""}\x1b[90m  📦 ${ellipsis(dataSize, 5)}`)
+	beeMessage(`\x1b[90m<--\x1b[37m ${ellipsis(route, 15)}\x1b[0m ${connection.shortId ? ` ${connection.user ? "☀️" : "☁️"}\x1b[90m ${connection.shortId}\x1b[0m` : ""}\x1b[90m  📦 ${ellipsis(dataSize, 5)}`)
 
 	const id = String(Math.random())
 
@@ -191,7 +193,7 @@ export function request(route: string, data: any, connectionShortId: string): st
 		id,
 		date: Date.now(),
 		route,
-		connectionShortId
+		connection
 	})
 
 	return id;
@@ -213,8 +215,8 @@ export function response(id: string, success: boolean, responseData?: any, messa
 			}m ${
 				ellipsis(pendingRequest.route, 15)
 			}\x1b[0m ${
-				pendingRequest.connectionShortId
-					? ` 🦊\x1b[90m ${pendingRequest.connectionShortId}\x1b[0m`
+				pendingRequest.connection.shortId
+					? ` ${pendingRequest.connection.user ? "☀️" : "☁️"}\x1b[90m ${pendingRequest.connection.shortId}\x1b[0m`
 					: ""
 			}\x1b[0m\x1b[90m${
 				responseData

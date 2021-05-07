@@ -6,8 +6,8 @@ import log from "./utils/log";
 import processListeners from "./utils/processEvents";
 import connectToDB from "./utils/connectToDB";
 import controlSession from "./session/controlSession";
-import controlFactory from "./utils/factoryMethods";
-import { Method, ModelDeclaration } from "./types";
+import repositoryControllers from "./repositoryControllers";
+import { Method, ModelDeclaration, RepoControllersReturnTypes, RepoControllerType } from "./types";
 import User from "./classes/User.class";
 import SocketConnection from "./classes/SocketConnection.class";
 import checkErrorType from './utils/checkErrorType'
@@ -16,6 +16,7 @@ import Document from "./classes/Document.class"
 
 
 import cors from 'cors';
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -33,7 +34,7 @@ class Sun<UserType extends User> {
 	io: IOServer; // Socket IO server
 	connections: SocketConnection<UserType>[] = []; // Liste des connections socket actives
 	controllers: {[route: string] : Method<UserType, any, any>} = {}; // Liste des routes/controllers
-	factories: ModelDeclaration<UserType, any>[] = []; // Liste des factories/modèles
+	repositories: ModelDeclaration<UserType, any>[] = []; // Liste des repositories/modèles
 
 	constructor(dataBaseURL: string, port: number, config?: Partial<socketIo.ServerOptions>) {
 		log.lb();
@@ -109,7 +110,7 @@ class Sun<UserType extends User> {
 	//////////////////////////////////////////////////////////////////////////////////////////////
 
 	/**
-	 * Handle automatic factory routes
+	 * Handle automatic repository routes
 	 * @param modelDeclaration
 	 */
 	public use(modelDeclaration: ModelDeclaration<UserType, any>): void
@@ -121,7 +122,7 @@ class Sun<UserType extends User> {
 	public use(route: string, method: Method<UserType, any, any>): void
 	public use(route_or_modelDeclaration: string | ModelDeclaration<UserType, any>, method?: Method<UserType, any, any>) {
 		///////////////////////////////////////////////////////////////////////////////////
-		if( // Overload 1 : factory
+		if( // Overload 1 : repository
 			typeof route_or_modelDeclaration === "string"
 			&& typeof method === "function"
 		) {
@@ -140,11 +141,11 @@ class Sun<UserType extends User> {
 		) {
 			const modelDeclaration = route_or_modelDeclaration;
 
-			log.info(`Adding \x1b[33mfactory controllers\x1b[90m to routes \x1b[33m${modelDeclaration.name}/\x1b[33mgetAll\x1b[31m|\x1b[33mpost\x1b[31m|\x1b[33mpatch\x1b[31m|\x1b[33mdelete\x1b[90m.`, )
+			log.info(`Adding \x1b[33mrepository controllers\x1b[90m to routes \x1b[33m${modelDeclaration.name}/\x1b[33mgetAll\x1b[31m|\x1b[33mgetArchived\x1b[31m|\x1b[33mgetRemoved\x1b[31m|\x1b[33mpost\x1b[31m|\x1b[33mpatch\x1b[31m|\x1b[33mremove\x1b[31m|\x1b[33marchive\x1b[31m|\x1b[33mdestroy\x1b[90m.`, )
 
-			this.factories.push(modelDeclaration); // Ajoute le modèle/factory à la liste
+			this.repositories.push(modelDeclaration); // Ajoute le modèle/repositories à la liste
 
-			this.controllers = { ...this.controllers, ...controlFactory(modelDeclaration) };
+			this.controllers = { ...this.controllers, ...repositoryControllers(modelDeclaration) };
 		}
 		//////////////////////////////////////////////////////////////////////////////////////
 		else { // No mathing overload
@@ -164,7 +165,7 @@ class Sun<UserType extends User> {
 		method: Method<UserType, any, any>,
 	){
 		connection.socket.on(path, async (requestData: any, callback: (result: any) => void) => {
-			const requestId = log.request(path, requestData, connection.shortId);
+			const requestId = log.request(path, requestData, connection);
 
 			try {
 				new Promise((resolve, reject) => {
@@ -177,14 +178,14 @@ class Sun<UserType extends User> {
 							{
 								resolve,
 								reject,
-								dispatch: <DocType extends Document>(factoryName: string, type: "post" | "patch" | "delete", data: any) =>
-									dispatchChanges<UserType, DocType>(
+								dispatch: <DocType extends Document, ControllerType extends RepoControllerType>(repositoryName: string, controllerType: ControllerType, data: RepoControllersReturnTypes<DocType>[ControllerType]) =>
+									dispatchChanges<UserType, DocType, ControllerType>(
 										this.getConnections,
-										this.getFactories,
+										this.getRepositories,
 										connection,
 										new Date,
-										factoryName,
-										type,
+										repositoryName,
+										controllerType,
 										data
 									)
 							});
@@ -225,8 +226,8 @@ class Sun<UserType extends User> {
 		return this.connections;
 	}
 
-	getFactories = () => {
-		return this.factories;
+	getRepositories = () => {
+		return this.repositories;
 	}
 }
 

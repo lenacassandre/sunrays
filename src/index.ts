@@ -1,4 +1,4 @@
-import Automaton from "./main";
+import Sun from "./main";
 import createModel from "./utils/createModel";
 import Mongoose, {Schema, Model} from "mongoose";
 import ObjectId = Mongoose.Types.ObjectId;
@@ -28,7 +28,7 @@ export {
     Request,
     Schema,
     Model,
-    Automaton,
+    Sun,
     Document,
     User,
     SocketConnection,
@@ -42,3 +42,5 @@ export {
 	Secret,
     safeUser
 };
+
+export default Sun
