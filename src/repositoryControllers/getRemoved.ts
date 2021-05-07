@@ -43,7 +43,7 @@ export function getRemoved<UserType extends User, DocType extends Document>(
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
 			if(req.connection.user && !req.connection.user.roles.includes(1)) {
 				//@ts-ignore
-				queryFilter.organization = {$in: [...req.connection.user.organization]}
+				queryFilter.organization = {$in: [...(req.connection.user.organization || [])]}
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////////
