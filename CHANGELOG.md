@@ -2,6 +2,22 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.1.0](https://github.com/lenacassandre/sunrays/compare/v0.0.17...v0.1.0) (2021-05-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* **archives & organizations update:** New permission function are required with a model declaration
+
+### Features
+
+* **archives & organizations update:** archives and trash System. Organization, roles, superadmin ([966f8a8](https://github.com/lenacassandre/sunrays/commit/966f8a8fcbf3e63b716ed2181622f57c36fdab03))
+
+
+### Bug Fixes
+
+* **package.json:** removed koa ([7f5461e](https://github.com/lenacassandre/sunrays/commit/7f5461ef67cf2f3c5ef25b52975992cb59fbb0ff))
+
 ### [0.0.17](https://github.com/lenacassandre/sunrays/compare/v0.0.16...v0.0.17) (2021-04-14)
 
 
