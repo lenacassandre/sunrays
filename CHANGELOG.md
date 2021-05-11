@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.4](https://github.com/lenacassandre/sunrays/compare/v0.2.3...v0.2.4) (2021-05-11)
+
+
+### Bug Fixes
+
+* **getall x user:** getAll, getArchives & getRemoved no longer send password hash ([07a2680](https://github.com/lenacassandre/sunrays/commit/07a268079600ea2868c268dbeada4c436b936a9c))
+
 ### [0.2.3](https://github.com/lenacassandre/sunrays/compare/v0.2.2...v0.2.3) (2021-05-07)
 
 
