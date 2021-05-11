@@ -1,6 +1,7 @@
 import { FilterQuery, Document as MongooseDocument } from "mongoose";
 import Document from "../classes/Document.class";
 import User from "../classes/User.class";
+import safeUser from "../session/utils/safeUser";
 
 import { Method, ModelDeclaration, RepoControllersArgumentsTypes, RepoControllersReturnTypes, Request, Response } from "../types";
 
@@ -62,7 +63,7 @@ export function getRemoved<UserType extends User, DocType extends Document>(
 						try {
 							if(modelDeclaration.permissions.request) {
 								// La fonction de permission renvoie un objet pur contenant uniquement les propriétés que l'ont souhaite faire passer
-								let docObject = await modelDeclaration.permissions.request(req.connection.user, doc);
+								let docObject: any = await modelDeclaration.permissions.request(req.connection.user, doc);
 
 								// Ok pour superadmin
 								if(req.connection.user && req.connection.user.roles.includes(1)) {
@@ -70,6 +71,11 @@ export function getRemoved<UserType extends User, DocType extends Document>(
 								}
 
 								if(docObject) { // Si un objet a été retourné, on l'ajoute au tableau des résultats.
+									// Empêche d'envoi de le hash des mots de passe si le repo est celui des utilisateurs. À la place, envoie une propriété "hasPassword" si le mot de passe est non nul.
+									if(modelDeclaration.name === "user") {
+										docObject = safeUser<UserType>(<UserType><unknown>docObject);
+									}
+
 									docObject._id = doc._id; // L'ID doit obligatoirement être envoyé
 									result.push(<(Partial<DocType> & {_id: string})>docObject)
 								}
