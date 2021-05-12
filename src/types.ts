@@ -13,9 +13,9 @@ import SocketConnection from "./classes/SocketConnection.class";
 export declare type RepoControllerType = "post" | "patch" | "remove" | "archive" | "destroy" | "unarchive" | "restore" | "getAll" | "getArchives" | "getRemoved"
 
 export declare type RepoControllersArgumentsTypes<DocType extends Document> = {
-	getAll: undefined,
-	getArchives: undefined,
-	getRemoved: undefined,
+	getAll: string[],
+	getArchives: string[],
+	getRemoved: string[],
 	archive: string[]
 	unarchive: string[]
 	remove: string[]

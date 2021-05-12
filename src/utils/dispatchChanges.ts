@@ -20,21 +20,21 @@ export default async function dispatchChanges<UserType extends User, DocType ext
     getModelsDeclarations: () => ModelDeclaration<UserType, any>[], // La liste de toutes les factories actuellement enregistrées sur l'app.
     authorConnection: SocketConnection<UserType>, // L'utilisateur•ice qui a demandé la mutation
     date: Date,
-    factoryName: string, // La factory qui a été modifiée
+    repositoryName: string, // La factory qui a été modifiée
     controllerType: ControllerType, // Type de mutation. Classique ou personnalisé.
     data: RepoControllersReturnTypes<DocType>[ControllerType], // Les données de la mutation
 ) {
     const connections = getConnections();
     const modelsDeclarations = getModelsDeclarations();
 
-    const modelDeclaration = modelsDeclarations.find(md => md.name === factoryName);
+    const modelDeclaration = modelsDeclarations.find(md => md.name === repositoryName);
 
     if(!Array.isArray(data)) {
         return log.error("dispatchChanges. data must be an array.")
     }
 
     if(!modelDeclaration) {
-        return log.error(`dispatchChanges. Aucune déclaration de modèle "${factoryName}" trouvée.`)
+        return log.error(`dispatchChanges. Aucune déclaration de modèle "${repositoryName}" trouvée.`)
     }
 
     if(data.length === 0) {
@@ -45,8 +45,23 @@ export default async function dispatchChanges<UserType extends User, DocType ext
         return log.warn(`dispatchChanges. modelDeclaration.permissions.request is undefined`)
     }
 
-    const getQueryFilter = (connection: SocketConnection<UserType>) => {
-        const queryFilter: FilterQuery<MongooseDocument<DocType>> = modelDeclaration.permissions.requestFilter ? modelDeclaration.permissions.requestFilter(connection.user) : {};
+    // doc ou id, DocType | string
+    const dataType = getDataType(controllerType);
+
+    // @ts-ignore ça marche. Pas le temps de typer correctement. Liste des ids des documents qui ont été touchés.
+    const ids: string[] = dataType === "id" ? data : data.map(d => d._id)
+
+    /////////////////////////////////////////////////////////////////////////////////////////////////////////
+    // Renvoie un query filter mongoDB en fonction de l'utilisateur
+    const getQueryFilter = async (connection: SocketConnection<UserType>) => {
+        let queryFilter: FilterQuery<MongooseDocument<DocType>>;
+
+        if(modelDeclaration.permissions.requestFilter)  {
+            queryFilter = await modelDeclaration.permissions.requestFilter(connection.user);
+        }
+        else {
+            queryFilter = {};
+        }
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(connection.user && !connection.user.roles.includes(1)) {
@@ -54,35 +69,48 @@ export default async function dispatchChanges<UserType extends User, DocType ext
             queryFilter.organization = {$in: req.connection.user.organization}
         }
 
+        // @ts-ignore
+        queryFilter._id = {$in: [...ids]}
+
         return queryFilter
     }
 
-    const dataType = getDataType(controllerType);
-
-    let count = 0;
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+    log.debug("REMOTE CHANGES 1")
+
+    // pour les logs
+    let count = 0;
+
     for(const connection of connections) {
+        log.debug("REMOTE CHANGES 2")
         if(connection.socket.id !== authorConnection.socket.id) { // On n'envoie pas les données à la connexion qui est à l'origine du dispatch
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////:::
             // VERIFIE QUE L'UTILISATEUR A ACCES AUX CHANGEMENT QUI VIENNENT D'ETRE EFFECTUES
-            const queryFilter = getQueryFilter(connection)
+            log.debug("REMOTE CHANGES 3")
 
-            // @ts-ignore ça marche. Pas le temps de typer correctement
-            const ids: string[] = dataType === "id" ? data : data.map(d => d._id)
+            // TODO : permettre le remoteChanges de destroy. C'est pour l'instant impossible puisque les doc sont suppr avec qu'on fasse le dispatch changes, donc impossible d'utiliser les fonctions de permission. Gros refactor à faire...
+            const queryFilter = await getQueryFilter(connection)
 
-            const modifiedDocs: DocType[] = modelDeclaration.model.find(queryFilter)
-                .where("_id")
-                .in(ids)
-                .lean<DocType>()
-                .exec()
+            log.debug("REMOTE CHANGE IDS", ids)
+
+            // Get all modified docs
+            const modifiedDocs: DocType[] = await modelDeclaration.model.find(queryFilter).lean().exec();
+
+            log.debug("REMOTE CHANGE modifiedDocs", modifiedDocs)
+
+            if(!Array.isArray(modifiedDocs)) break;
 
             // Tableau de données qui sera envoyé à l'utilisateur. Peut être un tableau d'id ou un tableau d'objets
             const dataToSend: (string | (Partial<DocType> & {_id: string}))[] = []
 
             for(const doc of modifiedDocs) {
+                log.debug("REMOTE CHANGE doc", doc)
+
                 const authorizedData = await modelDeclaration.permissions.request(connection.user, doc);
+
+                log.debug("REMOTE CHANGE authorizedData", authorizedData)
 
                 // Le document est accessible par l'utilisateur
                 if(authorizedData) {
@@ -91,23 +119,37 @@ export default async function dispatchChanges<UserType extends User, DocType ext
                         //@ts-ignore
                         dataToSend.push(doc._id)
                     }
-                    // Pour les controlleurs qui renvoient des objets
+                    // Pour les controlleurs qui renvoient des objets. post et patch
                     else {
                         //@ts-ignore
-                        const objectToSend: Partial<DocType> = {_id: doc._id};
+                        const objectToSend: (Partial<DocType> & {_id: string}) = {_id: doc._id};
 
-                        //@ts-ignore je comprends pas ce qu'il se passe ici, sur data.find
-                        const dataObject: DocType | undefined = data.find(o => o._id === doc._id)
+                        log.debug("REMOTE CHANGE data", data)
+
+                        // Trouve l'objet post ou patch de la requête qui correspond au document autorisé
+                        // @ts-ignore ...
+                        const dataObject: DocType | undefined = [...data].find(o => doc._id.equals(o._id))
+
+                        log.debug("REMOTE CHANGE dataObject", dataObject)
+
+                        // Si l'objet est trouvé
                         if(dataObject) {
                             for(let key in dataObject) {
+                                log.debug("REMOTE CHANGE key", key)
+
                                 // Obligée de faire ça pour TS...
                                 const docKey: keyof DocType = key as keyof DocType;
 
                                 if(key in authorizedData) {
+                                    log.debug("REMOTE CHANGE dataObject[docKey]", dataObject[docKey])
+
+                                    // @ts-ignore flemme
                                     objectToSend[docKey] = dataObject[docKey];
                                 }
                             }
                         }
+
+                        dataToSend.push(objectToSend)
                     }
                 }
             }
@@ -118,7 +160,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
                     userName: authorConnection.user.userName,
                 } : null,
                 date,
-                factoryName,
+                repositoryName,
                 controllerType,
                 data: dataToSend
             });
@@ -127,5 +169,5 @@ export default async function dispatchChanges<UserType extends User, DocType ext
         }
     }
 
-    if(count > 0) log.dispatch(`${factoryName}/${controllerType}`, count);
+    if(count > 0) log.dispatch(`${repositoryName}/${controllerType}`, count);
 }

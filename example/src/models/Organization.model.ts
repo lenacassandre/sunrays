@@ -15,6 +15,7 @@ export default createModel<User, Organization>(
 			return {}
 		},
 		request: async (user, doc) => {
+			console.log("REQUEST ORGA", user, doc)
 			if(user) {
 				return {
 					name: doc.name,
