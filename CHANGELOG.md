@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.3.0](https://github.com/lenacassandre/sunrays/compare/v0.2.5...v0.3.0) (2021-05-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* **http routes:** Permissions functions's arguments order is changed.
+
+### Features
+
+* **http routes:** the server is automatically listening to all routes/controllers with HTTP ([8e1c2ef](https://github.com/lenacassandre/sunrays/commit/8e1c2ef6c0ac4e2fb93f32fe0bb2079d32939c53))
+
 ### [0.2.5](https://github.com/lenacassandre/sunrays/compare/v0.2.4...v0.2.5) (2021-05-12)
 
 
