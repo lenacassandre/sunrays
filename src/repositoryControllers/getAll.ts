@@ -20,25 +20,17 @@ export function getAll<UserType extends User, DocType extends Document>(
 		res: Response<RepoControllersReturnTypes<DocType>["getAll"]>
 	) => {
 		try {
-			log.debug(modelDeclaration.name, "GET ALL. start.");
-
 			if(!modelDeclaration.permissions.request) {
 				return res.reject("No request permission given.");
 			}
 
-			log.debug(modelDeclaration.name, "GET ALL", "got permission function");
-
 			// Le query object mongoose
 			let queryFilter: FilterQuery<MongooseDocument<DocType>> = {};
-
-			log.debug(modelDeclaration.name, "GET ALL", "queryFilter", queryFilter);
 
 			// Si un requestFilter est déclaré, on le récupère
 			if(modelDeclaration.permissions.requestFilter) {
 				queryFilter = await modelDeclaration.permissions.requestFilter(req.connection.user); // Demande un query filter pour accélérer la requête
 			}
-
-			log.debug(modelDeclaration.name, "GET ALL", "queryFilter", queryFilter);
 
 			// Si le requestFilter a renvoyé null, la requête est refusée, on renvoie un tableau vide
 			if(queryFilter === null) {
@@ -51,15 +43,11 @@ export function getAll<UserType extends User, DocType extends Document>(
 			//@ts-ignore
 			queryFilter.archived = {$ne: true};
 
-			log.debug(modelDeclaration.name, "GET ALL", "queryFilter", queryFilter);
-
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
 			if(req.connection.user && !req.connection.user.roles.includes(1)) {
 				//@ts-ignore
 				queryFilter.organization = {$in: [...(req.connection.user.organization || [])]}
 			}
-
-			log.debug(modelDeclaration.name, "GET ALL", "queryFilter", queryFilter);
 
 			////////////////////////////////////////////////////////////////////////////////////////////////
 			// Demande à mongoose de renvoyer les documents sous la forme d'objets JS purs (lean), avec le query Filter
@@ -70,19 +58,13 @@ export function getAll<UserType extends User, DocType extends Document>(
 				}
 				// La requête a réussi. On a tous les documents en fonction du query filter. Il reste un autre tri à effectuer.
 				else {
-					log.debug(modelDeclaration.name, "GET ALL", "queryFilter", "docs", docs)
-
 					const result: (Partial<DocType> & {_id: string})[] = []; // Le tableau qui contient tous les objects qu'on va envoyer au client.
 
 					for(const doc of docs) { // Pour tous les documents que mongoogse a trouvé.
 						try {
-							log.debug(modelDeclaration.name, "GET ALL", "queryFilter", "doc", doc)
-
 							if(modelDeclaration.permissions.request) {
 								// La fonction de permission renvoie un objet pur contenant uniquement les propriétés que l'ont souhaite faire passer
-								let docObject: any = await modelDeclaration.permissions.request(req.connection.user, doc);
-
-								log.debug(modelDeclaration.name, "GET ALL", "queryFilter", "docObject", docObject)
+								let docObject: any = await modelDeclaration.permissions.request(doc, req.connection.user);
 
 								// Ok pour superadmin
 								if(req.connection.user && req.connection.user.roles.includes(1)) {

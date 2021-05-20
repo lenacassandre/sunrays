@@ -65,7 +65,7 @@ export function getArchives<UserType extends User, DocType extends Document>(
 						try {
 							if(modelDeclaration.permissions.request) {
 								// La fonction de permission renvoie un objet pur contenant uniquement les propriétés que l'ont souhaite faire passer
-								let docObject: any = await modelDeclaration.permissions.request(req.connection.user, doc);
+								let docObject: any = await modelDeclaration.permissions.request(doc, req.connection.user);
 
 								// Ok pour superadmin
 								if(req.connection.user && req.connection.user.roles.includes(1)) {

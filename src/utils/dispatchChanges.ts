@@ -1,7 +1,7 @@
 import { FilterQuery, Document as MongooseDocument } from "mongoose";
 
 import { model } from "mongoose";
-import { SocketConnection } from "..";
+import Connection from "../classes/Connection.class";
 import Document from "../classes/Document.class";
 import User from "../classes/User.class";
 import safeUser from "../session/utils/safeUser";
@@ -16,9 +16,9 @@ const getDataType = (controllerType: RepoControllerType) => controllerType === "
  * Ne supporte que les mutations "classiques" (post, patch et delete)
  */
 export default async function dispatchChanges<UserType extends User, DocType extends Document, ControllerType extends RepoControllerType>(
-    getConnections: () => SocketConnection<UserType>[], // La liste de toutes les connections Socket
+    getConnections: () => Connection<"socket", UserType>[], // La liste de toutes les connections Socket
     getModelsDeclarations: () => ModelDeclaration<UserType, any>[], // La liste de toutes les factories actuellement enregistrées sur l'app.
-    authorConnection: SocketConnection<UserType>, // L'utilisateur•ice qui a demandé la mutation
+    authorConnection: Connection<any, UserType>, // L'utilisateur•ice qui a demandé la mutation
     date: Date,
     repositoryName: string, // La factory qui a été modifiée
     controllerType: ControllerType, // Type de mutation. Classique ou personnalisé.
@@ -53,7 +53,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
 
     /////////////////////////////////////////////////////////////////////////////////////////////////////////
     // Renvoie un query filter mongoDB en fonction de l'utilisateur
-    const getQueryFilter = async (connection: SocketConnection<UserType>) => {
+    const getQueryFilter = async (connection: Connection<any, UserType>) => {
         let queryFilter: FilterQuery<MongooseDocument<DocType>>;
 
         if(modelDeclaration.permissions.requestFilter)  {
@@ -85,7 +85,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
 
     for(const connection of connections) {
         log.debug("REMOTE CHANGES 2")
-        if(connection.socket.id !== authorConnection.socket.id) { // On n'envoie pas les données à la connexion qui est à l'origine du dispatch
+        if(!authorConnection.socket || connection.socket.id !== authorConnection.socket.id) { // On n'envoie pas les données à la connexion qui est à l'origine du dispatch
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////:::
             // VERIFIE QUE L'UTILISATEUR A ACCES AUX CHANGEMENT QUI VIENNENT D'ETRE EFFECTUES
             log.debug("REMOTE CHANGES 3")
@@ -108,7 +108,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
             for(const doc of modifiedDocs) {
                 log.debug("REMOTE CHANGE doc", doc)
 
-                const authorizedData = await modelDeclaration.permissions.request(connection.user, doc);
+                const authorizedData = await modelDeclaration.permissions.request(doc, connection.user);
 
                 log.debug("REMOTE CHANGE authorizedData", authorizedData)
 

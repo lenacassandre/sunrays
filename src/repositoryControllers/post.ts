@@ -38,7 +38,7 @@ export function post<UserType extends User, DocType extends Document>(
 					log.debug("Got temporary id", newDoc._id)
 
 					try {
-						let newDocObject = await modelDeclaration.permissions.post(req.connection.user, newDoc); // La fonction de permission va renvoyer null, ou un objet qui devra ensuite être enregistré.
+						let newDocObject = await modelDeclaration.permissions.post(newDoc, req.connection.user); // La fonction de permission va renvoyer null, ou un objet qui devra ensuite être enregistré.
 
 						if(newDocObject) {
 							log.debug("Authorized new document object", newDocObject)

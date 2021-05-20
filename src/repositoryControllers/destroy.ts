@@ -43,7 +43,7 @@ export function destroy<UserType extends User, DocType extends Document>(
 
 			for(const doc of docsToDelete) {
 				try {
-					let authorizedDelete = await modelDeclaration.permissions.destroy(req.connection.user, doc);
+					let authorizedDelete = await modelDeclaration.permissions.destroy(doc, req.connection.user);
 
 					// Ok pour superadmin
 					if(req.connection.user && req.connection.user.roles.includes(1)) {

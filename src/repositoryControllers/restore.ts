@@ -45,7 +45,7 @@ export function restore<UserType extends User, DocType extends Document>(
         for(const currentDoc of docsToPatch) {
             try {
 				// Vérifie que l'utilisateur a le droit de supprimmer/restaurer ce document
-                let isRestoreAuthorized = await modelDeclaration.permissions.remove(req.connection.user, currentDoc);
+                let isRestoreAuthorized = await modelDeclaration.permissions.remove(currentDoc, req.connection.user);
 
                 // Ok pour superadmin
 				if(req.connection.user && req.connection.user.roles.includes(1)) {

@@ -14,8 +14,7 @@ export default createModel<User, Organization>(
 		requestFilter: async (_user) => {
 			return {}
 		},
-		request: async (user, doc) => {
-			console.log("REQUEST ORGA", user, doc)
+		request: async (doc, user) => {
 			if(user) {
 				return {
 					name: doc.name,
@@ -25,7 +24,7 @@ export default createModel<User, Organization>(
 				return null;
 			}
 		},
-		post: async (user, doc) => {
+		post: async (doc, user) => {
 			if(user) {
 				return doc
 			}
@@ -33,7 +32,7 @@ export default createModel<User, Organization>(
 				return null
 			}
 		},
-		patch: async (user, _currentDoc, patch) => {
+		patch: async (_currentDoc, patch, user) => {
 			if(user) {
 				return patch;
 			}
@@ -41,7 +40,7 @@ export default createModel<User, Organization>(
 				return null
 			}
 		},
-		remove: async (user, _doc) => {
+		remove: async (_doc, user) => {
 			if(user) {
 				return true
 			}
@@ -49,8 +48,8 @@ export default createModel<User, Organization>(
 				return null
 			}
 		},
-		archive: async (user, doc) => true,
-		destroy: async (user, doc) => true,
+		archive: async (doc, user) => true,
+		destroy: async (doc, user) => true,
 	},
 	{}
 )

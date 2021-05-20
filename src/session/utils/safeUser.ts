@@ -1,10 +1,14 @@
 import { User } from "../..";
-import { Omit } from '../../types'
+import { Omit, SafeUser } from '../../types'
 
-export default function safeUser<UserType extends User>(user: UserType): Omit<UserType, "password"> & {hasPassword: boolean} {
+export default function safeUser<U extends User>(user: U | SafeUser<U>): SafeUser<U> {
     return {
         ...user,
-        hasPassword: user.password && user.password.length > 0 ? true : false,
+        hasPassword: "hasPassword" in user
+            ? user.hasPassword
+            : user.password && user.password.length > 0
+            ? true
+            : false,
         password: undefined,
     }
 }

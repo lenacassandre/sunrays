@@ -46,7 +46,7 @@ export function unarchive<UserType extends User, DocType extends Document>(
         for(const currentDoc of docsToPatch) {
             try {
                 // Vérifie que l'utilisateur a le droit d'archiver/désarchiver ce document
-                let isUnarchiveAuthorized = await modelDeclaration.permissions.archive(req.connection.user, currentDoc);
+                let isUnarchiveAuthorized = await modelDeclaration.permissions.archive(currentDoc, req.connection.user);
 
                 // Ok pour superadmin
 				if(req.connection.user && req.connection.user.roles.includes(1)) {

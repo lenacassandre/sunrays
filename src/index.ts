@@ -4,7 +4,7 @@ import Mongoose, {Schema, Model} from "mongoose";
 import ObjectId = Mongoose.Types.ObjectId;
 import Document from './classes/Document.class'
 import User, {processUserSchemaDeclaration} from './classes/User.class'
-import SocketConnection from './classes/SocketConnection.class'
+import Connection from './classes/Connection.class'
 import {Secret} from 'jsonwebtoken'
 import readHTMLFile from './utils/readHTMLFile'
 import mailTo from './utils/mailTo'
@@ -31,7 +31,7 @@ export {
     Sun,
     Document,
     User,
-    SocketConnection,
+    Connection,
     processUserSchemaDeclaration,
     log,
     getModel,

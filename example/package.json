@@ -8,7 +8,8 @@
     "watch-node": "nodemon dist/app.js",
     "watch": "rm -rf dist && concurrently \"npm run watch-ts\" \"npm run watch-node\"",
     "watch-windows": "del /s /F /Q dist && concurrently \"npm run watch-ts\" \"npm run watch-node\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "kill": "kill -9 $(lsof -t -i:3001)"
   },
   "dependencies": {
     "@koa/cors": "^3.1.0",

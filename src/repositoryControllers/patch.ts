@@ -50,7 +50,7 @@ export function patch<UserType extends User, DocType extends Document>(
 
 				if(patch) {
 					try {
-						let authorizedPatch = await modelDeclaration.permissions.patch(req.connection.user, currentDoc, patch);
+						let authorizedPatch = await modelDeclaration.permissions.patch(currentDoc, patch, req.connection.user);
 
 						// Ok pour superadmin
 						if(req.connection.user && req.connection.user.roles.includes(1)) {

@@ -1,8 +1,7 @@
 import mongoose, { FilterQuery, Model, Document as MongooseDocument} from "mongoose";
 import User from "./classes/User.class"
 import Document from "./classes/Document.class"
-import { ObjectId } from ".";
-import SocketConnection from "./classes/SocketConnection.class";
+import Connection from "./classes/Connection.class";
 
 //////////////////////////////////////////////////////////////////////////////////////////:
 //////////////////////////////////////////////////////////////////////////////////////////:
@@ -46,8 +45,8 @@ export declare type SafeUser<UserType extends User> = Omit<UserType, "password">
 
 // Requêtes
 
-export declare type Method<UserType extends User, RequestData, ResponseData> = (
-	request: Request<UserType, RequestData>,
+export declare type Method<U extends User, RequestData, ResponseData> = (
+	request: Request<U, RequestData>,
 	response: Response<ResponseData>
 ) => void
 
@@ -60,7 +59,7 @@ export declare type Method<UserType extends User, RequestData, ResponseData> = (
  */
 export declare type Request<UserType extends User, RequestData> = {
 	// L'utilisateur est donné dans la requête si l'authentification est obligatoire
-	connection: SocketConnection<UserType>;
+	connection: Connection<any, UserType>;
 	data: RequestData
 }
 
@@ -97,21 +96,21 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @returns Un filtre de requête mongoose. null si la requête est refusée. Voir la doc : https://mongoosejs.com/docs/tutorials/query_casting.html
 	 */
-	requestFilter?: (user: SafeUser<UserType> | null) => Promise<FilterQuery<DocType>>;
+	requestFilter?: (user?: SafeUser<UserType>) => Promise<FilterQuery<DocType>>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•trice ait bien le droit d'accéder à un document demandé.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document mongoose demandé.
 	 * @returns Le document, ou une partie du document, sous forme d'objet pur javascript. C'est ce qui sera envoyé au client. null si la requête est refusée.
 	 */
-	request?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<Partial<DocType> | null>;
+	request?: (doc: DocType, user?: SafeUser<UserType>) => Promise<Partial<DocType> | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de créer le nouveau document demandé.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite créer.
 	 * @returns Le document, ou une partie du document, sous forme d'objet pur javascript. C'est ce qui sera enregistré sur le serveur. null si la requête est refusée.
 	 */
-	post?: (user: SafeUser<UserType> | null, doc: (Partial<DocType> & {_id: string})) => Promise<Partial<DocType> | null>;
+	post?: (doc: (Partial<DocType> & {_id: string}), user?: SafeUser<UserType>) => Promise<Partial<DocType> | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de modifier les propriétés données d'un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
@@ -119,28 +118,28 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 * @param patch Les modifications que l'utilisateur•trice souhaite apporter au document.
 	 * @returns Les modifications qui sont acceptées. null si la requête est refusée.
 	 */
-	patch?: (user: SafeUser<UserType> | null, currentDoc: DocType, patch: (Partial<DocType> & {_id: string})) => Promise<Partial<DocType> | null>;
+	patch?: (currentDoc: DocType, patch: (Partial<DocType> & {_id: string}), user?: SafeUser<UserType>) => Promise<Partial<DocType> | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de supprimer un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
 	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
 	 */
-	remove?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
+	remove?: (doc: DocType, user?: SafeUser<UserType>) => Promise<true | false | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit d'archiver un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
 	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
 	 */
-	archive?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
+	archive?: (doc: DocType, user?: SafeUser<UserType>) => Promise<true | false | null>;
 	/**
 	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de détruire définitivement un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
 	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
 	 */
-	destroy?: (user: SafeUser<UserType> | null, doc: DocType) => Promise<true | false | null>;
+	destroy?: (doc: DocType, user?: SafeUser<UserType>) => Promise<true | false | null>;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////
