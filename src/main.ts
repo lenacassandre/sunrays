@@ -1,4 +1,4 @@
-import expressServer, { Express } from "express"
+import express, { Express } from "express"
 import socketIo, {Server as IOServer} from "socket.io";
 import http from "http";
 import dotenv from "dotenv";
@@ -13,7 +13,6 @@ import Connection from "./classes/Connection.class";
 import checkErrorType from './utils/checkErrorType'
 import dispatchChanges from "./utils/dispatchChanges";
 import Document from "./classes/Document.class"
-
 
 import cors from 'cors';
 import getUserFromToken from "./session/utils/getUserFromToken";
@@ -65,8 +64,10 @@ class Sun<U extends User> {
 		log.info("Init socket server.");
 
 		// EXPRESS
-		this.app = expressServer();
+		this.app = express();
 		this.app.use(cors());
+		this.app.use(express.json());
+		this.app.use(express.urlencoded({ extended: true }));
 		this.app.options("*", cors);
 
 		// HTTP
@@ -221,6 +222,7 @@ class Sun<U extends User> {
 		})
 	}
 
+	// Save a controller to make every socket connections listen to it, and immediatly ask to the server to listen to it with HTTP
 	private saveController(route : string, controller: Method<U, any, any>) {
 		// Save route/controller to make each socket connection listen to it
 		this.controllers[route] = controller;

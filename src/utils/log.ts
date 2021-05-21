@@ -185,7 +185,23 @@ const pendingRequests: Request[] = []
 export function request(route: string, data: any, connection: Connection<any, User>): string {
 	const dataSize = getDataSize(data);
 
-	beeMessage(`\x1b[90m<-- ${connection.type === "http" ? "🌐" : "🔌"} \x1b[37m ${ellipsis(route, 15)}\x1b[0m ${connection.shortId ? ` ${connection.user ? "☀️" : "☁️"}\x1b[90m ${connection.shortId}\x1b[0m` : ""}\x1b[90m  📦 ${ellipsis(dataSize, 5)}`)
+	beeMessage(
+		`\x1b[90m<-- ${
+			connection.type === "http"
+				? "🌐"
+				: "🔌"
+		} \x1b[37m ${
+			ellipsis(route, 15)
+		}\x1b[0m ${
+			connection.user
+				? "☀️"
+				: "☁️"
+		}\x1b[90m ${
+			connection.shortId || "     "
+		}\x1b[0m\x1b[90m  📦 ${
+			ellipsis(dataSize, 5)
+		}`
+	)
 
 	const id = String(Math.random())
 
@@ -217,10 +233,10 @@ export function response(id: string, success: boolean, responseData?: any, messa
 			}m ${
 				ellipsis(pendingRequest.route, 15)
 			}\x1b[0m ${
-				pendingRequest.connection.shortId
-					? ` ${pendingRequest.connection.user ? "☀️" : "☁️"}\x1b[90m ${pendingRequest.connection.shortId}\x1b[0m`
-					: ""
-			}\x1b[0m\x1b[90m${
+				pendingRequest.connection.user
+					? "☀️"
+					: "☁️"
+			}\x1b[90m ${pendingRequest.connection.shortId || "     "}\x1b[0m\x1b[0m\x1b[90m${
 				responseData
 					? `  📦 ${ellipsis(dataSize, 5)}`
 					: ""
