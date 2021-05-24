@@ -37,7 +37,7 @@ export function destroy<UserType extends User, DocType extends Document>(
 			// Liste des documents à détruire.
 			const docsToDelete = await modelDeclaration.model.find(queryFilter)
 				.where("_id")
-				.in(req.data)
+				.in(req.body)
 				.lean<DocType>()
 				.exec()
 

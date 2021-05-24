@@ -17,25 +17,25 @@ export async function signup(
     >,
     res: Response<{_id: string, token: string}>
 ) {
-        if(!req.data) return res.reject("Veuillez remplir le formulaire d'inscription."); // Refuse la requête si aucune info n'est envoyée.
-        if(!req.data.user) return res.reject("Veuillez remplir le formulaire d'inscription."); // Refuse la requête si aucune info n'est envoyée.
-		if(!req.data.user.userName) return res.reject("Veuillez indiquer une adresse e-mail valide."); // Refuse la requête si aucune adresse e-mail n'a été fournie.
-		if(!req.data.password) return res.reject("Veuillez saisir votre mot de passe."); // Refuse la requête si aucun mdp n'a été fournie.
+        if(!req.body) return res.reject("Veuillez remplir le formulaire d'inscription."); // Refuse la requête si aucune info n'est envoyée.
+        if(!req.body.user) return res.reject("Veuillez remplir le formulaire d'inscription."); // Refuse la requête si aucune info n'est envoyée.
+		if(!req.body.user.userName) return res.reject("Veuillez indiquer une adresse e-mail valide."); // Refuse la requête si aucune adresse e-mail n'a été fournie.
+		if(!req.body.password) return res.reject("Veuillez saisir votre mot de passe."); // Refuse la requête si aucun mdp n'a été fournie.
 
 		const UserModel = getModel<User>("user"); // Modèle mongoose des utilisateur·ices.
-		const userAlreadyExists = await UserModel.exists({ userName: req.data.user.userName }); // Vérifie que l'utilisateur·ice n'existe pas déjà.
+		const userAlreadyExists = await UserModel.exists({ userName: req.body.user.userName }); // Vérifie que l'utilisateur·ice n'existe pas déjà.
 
 		if(userAlreadyExists) return res.reject("L'utilsateur·ice existe déjà."); // Rejette la requête si un·e utilisateur·ice existe déjà avec la même adresse e-mail.
 
 		// On hash le mot de passe, puis on l'encrypte avec la clé secrète avant de l'enregistrer.
-		const hashedPassword = hash.generate(req.data.password);
+		const hashedPassword = hash.generate(req.body.password);
 
 		const userDocument = new UserModel({ // Nouveau document user
-			lastName: req.data.user.lastName,
-			firstName: req.data.user.firstName,
-			userName: req.data.user.userName,
-			roles: req.data.user.roles,
-			organizations: req.data.user.organizations,
+			lastName: req.body.user.lastName,
+			firstName: req.body.user.firstName,
+			userName: req.body.user.userName,
+			roles: req.body.user.roles,
+			organizations: req.body.user.organizations,
 			password: hashedPassword
 		});
 
@@ -45,7 +45,7 @@ export async function signup(
 				return res.reject("Erreur lors de la sauvegarde de l'utilisateur.");
 			} else {
 
-				const token = jwt.sign(req.data.user.userName); // Encrypte le userName pour créer un token et signer la session de l'utilisateur.
+				const token = jwt.sign(req.body.user.userName); // Encrypte le userName pour créer un token et signer la session de l'utilisateur.
 				//@ts-ignore TODO : différencier les types de réponse entre le resolve et le dispatch. Le dispatch post n'a pas pas besoin de oldId
 				res.dispatch("user", "post", [doc]);
 				res.resolve({_id: <string><unknown>doc.toObject()._id, token});

@@ -59,8 +59,9 @@ export declare type Method<U extends User, RequestData, ResponseData> = (
  */
 export declare type Request<UserType extends User, RequestData> = {
 	// L'utilisateur est donné dans la requête si l'authentification est obligatoire
-	connection: Connection<any, UserType>;
-	data: RequestData
+	connection: Connection<any, UserType>,
+	body: RequestData,
+	files?: any[],
 }
 
 

@@ -133,15 +133,15 @@ class Sun<U extends User> {
 		path: string,
 		method: Method<U, any, any>,
 	){
-		return async (requestData: any, callback: (result: any) => void) => {
-			const requestId = log.request(path, requestData, connection);
+		return async (req: {body: any; files?: any[]}, callback: (result: any) => void) => {
+			const requestId = log.request(path, req, connection);
 
 			try {
 				new Promise((resolve, reject) => {
 					try {
 						method(
 							{
-								data: requestData,
+								...req,
 								connection
 							},
 							{
@@ -191,7 +191,8 @@ class Sun<U extends User> {
 		path: string,
 		method: Method<U, any, any>,
 	){
-		connection.socket.on(path, this.wrapController(connection, path, method))
+		const wrappedController = this.wrapController(connection, path, method);
+		connection.socket.on(path, (body, callback) => wrappedController({body}, callback))
 	}
 
 	// Make the server listen for this route with HTTP

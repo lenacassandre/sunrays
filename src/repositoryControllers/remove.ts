@@ -41,7 +41,7 @@ export function remove<UserType extends User, DocType extends Document>(
         // On demande à mongoose tous les documents à supprimer
         const docsToRemove = await modelDeclaration.model.find(queryFilter)
             .where("_id")
-            .in(req.data)
+            .in(req.body)
             .lean<DocType>()
             .exec()
 

@@ -34,7 +34,7 @@ export function patch<UserType extends User, DocType extends Document>(
 				queryFilter.organization = {$in: [...(req.connection.user.organization || [])]}
 			}
 
-			const docsIdsToFind = req.data.map(doc => doc._id);
+			const docsIdsToFind = req.body.map(doc => doc._id);
 
 			const docsToPatch = await modelDeclaration.model.find(queryFilter)
 				.where("_id")
@@ -46,7 +46,7 @@ export function patch<UserType extends User, DocType extends Document>(
 			const patches: (Partial<DocType> & {_id: string})[] = [];
 
 			for(const currentDoc of docsToPatch) {
-				const patch = req.data.find(p => p._id === currentDoc._id.toString())
+				const patch = req.body.find(p => p._id === currentDoc._id.toString())
 
 				if(patch) {
 					try {

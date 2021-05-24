@@ -18,7 +18,7 @@ export function post<UserType extends User, DocType extends Document>(
 		req: Request<UserType, RepoControllersArgumentsTypes<DocType>["post"]>,
 		res: Response<RepoControllersReturnTypes<DocType>["post"]>
 	) => {
-		log.debug(modelDeclaration.name, "post controller. Data array lenth :", req.data.length)
+		log.debug(modelDeclaration.name, "post controller. Data array lenth :", req.body.length)
 
 		if(!modelDeclaration.permissions.post) {
 			return res.reject("No post permission given.")
@@ -31,7 +31,7 @@ export function post<UserType extends User, DocType extends Document>(
 
 			log.debug("Starting to loop through the data array");
 
-			for(const newDoc of req.data) {
+			for(const newDoc of req.body) {
 				log.debug("New document received", newDoc)
 
 				if(newDoc._id) { // And temporary Id must have been provided.

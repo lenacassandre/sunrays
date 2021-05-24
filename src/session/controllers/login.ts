@@ -14,15 +14,15 @@ export default async function login<UserType extends User>(
 	res: Response<{token: string; user: SafeUser<UserType>}>
 ) {
 	try {
-		if(!req.data) return res.reject("Veuilez saisir votre adresse e-mail et votre mot de passe.");
-		if (!req.data.userName) return res.reject("Veuilez saisir votre adresse e-mail.");
-		if (!req.data.password) return res.reject("Veuillez saisir votre mot de passe.");
+		if(!req.body) return res.reject("Veuilez saisir votre adresse e-mail et votre mot de passe.");
+		if (!req.body.userName) return res.reject("Veuilez saisir votre adresse e-mail.");
+		if (!req.body.password) return res.reject("Veuillez saisir votre mot de passe.");
 
 		const UserModel = getModel<UserType>("user")
-		const user = <UserType>await UserModel.findOne({ userName: req.data.userName }).lean<UserType>();
+		const user = <UserType>await UserModel.findOne({ userName: req.body.userName }).lean<UserType>();
 
 		if (user) {
-			const isPasswordCorrect = hash.verify(req.data.password, user.password)
+			const isPasswordCorrect = hash.verify(req.body.password, user.password)
 
 			if (isPasswordCorrect) {
 				const token = getTokenFromUser(user);

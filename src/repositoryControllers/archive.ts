@@ -38,7 +38,7 @@ export function archive<UserType extends User, DocType extends Document>(
         // On demande à mongoose tous les documents à archiver
         const docsToPatch = await modelDeclaration.model.find(queryFilter)
             .where("_id")
-            .in(req.data)
+            .in(req.body)
             .lean<DocType>()
             .exec()
 

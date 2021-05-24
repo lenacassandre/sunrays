@@ -42,7 +42,7 @@ export function baseRepoController<UserType extends User, DocType extends Docume
         // On demande à mongoose tous les documents à archiver
         const documents = await modelDeclaration.model.find(queryFilter)
             .where("_id")
-            .in(req.data)
+            .in(req.body)
             .lean<DocType>()
             .exec()
 

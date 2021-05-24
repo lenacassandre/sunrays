@@ -8,9 +8,9 @@ export default async function verify<UserType extends User>(
 	res: Response<{user: SafeUser<UserType>}>
 ) {
 	try {
-		if(!req.data) return res.reject("Session invalide. Essayez de vous reconnecter.");
+		if(!req.body) return res.reject("Session invalide. Essayez de vous reconnecter.");
 
-		const user = await getUserFromToken<UserType>(req.data.token);
+		const user = await getUserFromToken<UserType>(req.body.token);
 
 		if (user) {
 			const userResult = safeUser<UserType>(user); // On retire le mot de passe du résultat.
