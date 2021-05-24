@@ -1,4 +1,4 @@
-import express, { Express } from "express"
+import express, { Express  } from "express"
 import socketIo, {Server as IOServer} from "socket.io";
 import http from "http";
 import dotenv from "dotenv";
@@ -7,7 +7,7 @@ import processListeners from "./utils/processEvents";
 import connectToDB from "./utils/connectToDB";
 import controlSession from "./session/controlSession";
 import repositoryControllers from "./repositoryControllers";
-import { Method, ModelDeclaration, RepoControllersReturnTypes, RepoControllerType, SafeUser } from "./types";
+import { Files, Method, ModelDeclaration, RepoControllersReturnTypes, RepoControllerType, SafeUser } from "./types";
 import User from "./classes/User.class";
 import Connection from "./classes/Connection.class";
 import checkErrorType from './utils/checkErrorType'
@@ -133,7 +133,7 @@ class Sun<U extends User> {
 		path: string,
 		method: Method<U, any, any>,
 	){
-		return async (req: {body: any; files?: any[]}, callback: (result: any) => void) => {
+		return async (req: {body: any; files?: Files}, callback: (result: any) => void) => {
 			const requestId = log.request(path, req, connection);
 
 			try {
@@ -211,7 +211,9 @@ class Sun<U extends User> {
 
 			const wrapperController = this.wrapController(connection, route, controller);
 
-			wrapperController(req.body || {}, (response) => {
+			const files = req.files;
+
+			wrapperController({body: req.body, files}, (response) => {
 				if(response.error) {
 					res.status(403);
 				} else {

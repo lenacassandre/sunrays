@@ -61,8 +61,10 @@ export declare type Request<UserType extends User, RequestData> = {
 	// L'utilisateur est donné dans la requête si l'authentification est obligatoire
 	connection: Connection<any, UserType>,
 	body: RequestData,
-	files?: any[],
+	files?: Files,
 }
+
+export declare type Files = { [fieldname: string]: Express.Multer.File[]; } | Express.Multer.File[]
 
 
 /**
