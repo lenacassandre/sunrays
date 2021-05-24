@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.1](https://github.com/lenacassandre/sunrays/compare/v0.4.0...v0.4.1) (2021-05-24)
+
+
+### Bug Fixes
+
+* **http:** fixed request files type ([745c5aa](https://github.com/lenacassandre/sunrays/commit/745c5aa3a91ff6ada971f6de6419838b53bd09bc))
+
 ## [0.4.0](https://github.com/lenacassandre/sunrays/compare/v0.3.2...v0.4.0) (2021-05-24)
 
 
