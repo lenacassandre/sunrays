@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/lenacassandre/sunrays/compare/v0.3.2...v0.4.0) (2021-05-24)
+
+
+### ⚠ BREAKING CHANGES
+
+* **passed files in req:** req.data => req.body
+
+### Features
+
+* **passed files in req:** passing HTTP files in req ([51c5f14](https://github.com/lenacassandre/sunrays/commit/51c5f1453e5869a59f9afccf2502f80490499d42))
+
 ### [0.3.2](https://github.com/lenacassandre/sunrays/compare/v0.3.1...v0.3.2) (2021-05-21)
 
 ### [0.3.1](https://github.com/lenacassandre/sunrays/compare/v0.3.0...v0.3.1) (2021-05-21)
