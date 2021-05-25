@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.2](https://github.com/lenacassandre/sunrays/compare/v0.4.1...v0.4.2) (2021-05-25)
+
+
+### Features
+
+* **http:** added file prop to the request object ([810b6e3](https://github.com/lenacassandre/sunrays/commit/810b6e3fb529926662552e5b72b4c50419f3b386))
+
 ### [0.4.1](https://github.com/lenacassandre/sunrays/compare/v0.4.0...v0.4.1) (2021-05-24)
 
 
