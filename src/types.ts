@@ -50,6 +50,10 @@ export declare type Method<U extends User, RequestData, ResponseData> = (
 	response: Response<ResponseData>
 ) => void
 
+///////////////////////////////////////////////////////////////////////////////////////////
+export declare type File = Express.Multer.File;
+export declare type Files = { [fieldname: string]: File[]; } | File[]
+
 /**
  * Les requête sont les objets reçues par tous les controlleurs et contiennent toutes les
  * données envoyées par le client, ainsi que l'objet utilisateur de l'auteur de la requête
@@ -62,10 +66,8 @@ export declare type Request<UserType extends User, RequestData> = {
 	connection: Connection<any, UserType>,
 	body: RequestData,
 	files?: Files,
+	file?: File,
 }
-
-export declare type Files = { [fieldname: string]: Express.Multer.File[]; } | Express.Multer.File[]
-
 
 /**
  * La réponse se fait sous forme de promesse.

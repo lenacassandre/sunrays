@@ -133,7 +133,7 @@ class Sun<U extends User> {
 		path: string,
 		method: Method<U, any, any>,
 	){
-		return async (req: {body: any; files?: Files}, callback: (result: any) => void) => {
+		return async (req: {body: any; files?: Files, file?: Express.Multer.File}, callback: (result: any) => void) => {
 			const requestId = log.request(path, req, connection);
 
 			try {
@@ -212,8 +212,9 @@ class Sun<U extends User> {
 			const wrapperController = this.wrapController(connection, route, controller);
 
 			const files = req.files;
+			const file = req. file;
 
-			wrapperController({body: req.body, files}, (response) => {
+			wrapperController({body: req.body, files, file}, (response) => {
 				if(response.error) {
 					res.status(403);
 				} else {
