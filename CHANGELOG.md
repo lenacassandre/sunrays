@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.4](https://github.com/lenacassandre/sunrays/compare/v0.4.3...v0.4.4) (2021-05-26)
+
+
+### Features
+
+* getUserFromToken & getTokenFromUser ([374d11d](https://github.com/lenacassandre/sunrays/commit/374d11d47db36fc71d55ad7e8f8664bb34f49651))
+
 ### [0.4.3](https://github.com/lenacassandre/sunrays/compare/v0.4.2...v0.4.3) (2021-05-26)
 
 
