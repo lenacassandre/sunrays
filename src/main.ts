@@ -199,22 +199,25 @@ class Sun<U extends User> {
 	private httpListen(route: string, controller: Method<U, any, any>) {
 		log.info(`🌐 Listening \x1b[33m${route}\x1b[90m with HTTP.`);
 
-		this.app.use<{token: string, [prop: string]: any}, any>(`/${route}`, async (req, res) => {
+		this.app.use<any, any>(`/${route}`, async (req, res) => {
 			const connection = new Connection<"http", U>("http")
 
-			let user: null | U;
+			const token = req.headers?.authorization?.split(" ")[1];
 
-			if(req.body && req.body.token) {
-				user = await getUserFromToken<U>(req.body.token);
-				connection.connectUser(user)
+			if(token) {
+				const user = await getUserFromToken<U>(token);
+
+				if(user) {
+					connection.connectUser(user);
+				}
 			}
 
-			const wrapperController = this.wrapController(connection, route, controller);
+			const wrappedController = this.wrapController(connection, route, controller);
 
 			const files = req.files;
 			const file = req. file;
 
-			wrapperController({body: req.body, files, file}, (response) => {
+			wrappedController({body: req.body, files, file,}, (response) => {
 				if(response.error) {
 					res.status(403);
 				} else {
