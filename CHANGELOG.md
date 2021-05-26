@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.3](https://github.com/lenacassandre/sunrays/compare/v0.4.2...v0.4.3) (2021-05-26)
+
+
+### Bug Fixes
+
+* hTTP token is passed in header ([1c2fe94](https://github.com/lenacassandre/sunrays/commit/1c2fe94b498e8e495eaf938211cc4ea5aac15286))
+
 ### [0.4.2](https://github.com/lenacassandre/sunrays/compare/v0.4.1...v0.4.2) (2021-05-25)
 
 
