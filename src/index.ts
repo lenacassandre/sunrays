@@ -10,6 +10,9 @@ import readHTMLFile from './utils/readHTMLFile'
 import mailTo from './utils/mailTo'
 import getModel from './utils/getModel'
 
+import getUserFromToken from './session/utils/getUserFromToken';
+import getTokenFromUser from './session/utils/getTokenFromUser';
+
 import { Response, Request } from "./types";
 
 import log from './utils/log'
@@ -40,7 +43,9 @@ export {
 	hash,
 	jwt,
 	Secret,
-    safeUser
+    safeUser,
+    getUserFromToken,
+    getTokenFromUser
 };
 
 export default Sun
