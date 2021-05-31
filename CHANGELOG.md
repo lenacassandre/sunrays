@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.5](https://github.com/lenacassandre/sunrays/compare/v0.4.4...v0.4.5) (2021-05-31)
+
+
+### Bug Fixes
+
+* **repo controllers/superadmin:** removed hard coded permission for superadmins ([691818a](https://github.com/lenacassandre/sunrays/commit/691818a1fdc5a82a68e0d66baf5149b0397d702e))
+
 ### [0.4.4](https://github.com/lenacassandre/sunrays/compare/v0.4.3...v0.4.4) (2021-05-26)
 
 
