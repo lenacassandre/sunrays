@@ -46,16 +46,9 @@ export function post<UserType extends User, DocType extends Document>(
 							// Changement d'instance au cas où la permission a renvoyé la même
 							newDocObject = {...newDocObject};
 
-							//////////////////////////////////////////////////////////////////////////:
-							// SUPERADMIN
-							if(req.connection.user && req.connection.user.roles.includes(1)) {
-								log.debug("superadmin");
-
-								newDocObject = newDoc;
-							}
 							////////////////////////////////////////////////////////////////////////////////
 							// OTHER USERS (part of an organization)
-							else if(newDocObject) {
+							if(newDocObject) {
 								// On verrouille certaines modifications
 								delete newDocObject.archived
 								delete newDocObject.removed

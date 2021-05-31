@@ -52,12 +52,7 @@ export function patch<UserType extends User, DocType extends Document>(
 					try {
 						let authorizedPatch = await modelDeclaration.permissions.patch(currentDoc, patch, req.connection.user);
 
-						// Ok pour superadmin
-						if(req.connection.user && req.connection.user.roles.includes(1)) {
-							authorizedPatch = patch
-						}
-						// Si l'utilisateur n'est pas superadmin
-						else if(authorizedPatch) {
+						if(authorizedPatch) {
 							// On verrouille certaines modifications
 							delete authorizedPatch.archived
 							delete authorizedPatch.removed

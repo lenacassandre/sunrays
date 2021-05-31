@@ -46,11 +46,6 @@ export function archive<UserType extends User, DocType extends Document>(
             try {
                 let isArchiveAuthorized = await modelDeclaration.permissions.archive(currentDoc, req.connection.user);
 
-                // Ok pour superadmin
-                if(req.connection.user && req.connection.user.roles.includes(1)) {
-                    isArchiveAuthorized = true;
-                }
-
                 if(isArchiveAuthorized) {
                     // Archivage du document
                     //@ts-ignore je sais pas pourquoi il y a une erreur...

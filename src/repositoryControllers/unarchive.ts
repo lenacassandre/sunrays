@@ -48,11 +48,6 @@ export function unarchive<UserType extends User, DocType extends Document>(
                 // Vérifie que l'utilisateur a le droit d'archiver/désarchiver ce document
                 let isUnarchiveAuthorized = await modelDeclaration.permissions.archive(currentDoc, req.connection.user);
 
-                // Ok pour superadmin
-				if(req.connection.user && req.connection.user.roles.includes(1)) {
-					isUnarchiveAuthorized = true;
-				}
-
                 if(isUnarchiveAuthorized) {
                     // Archivage du document
                     //@ts-ignore je sais pas pourquoi il y a une erreur...

@@ -54,11 +54,6 @@ export function remove<UserType extends User, DocType extends Document>(
 				// Vérifie que l'utilisateur a le droit de supprimmer/restaurer ce document
                 let isRemoveAuthorized = await modelDeclaration.permissions.remove(currentDoc, req.connection.user);
 
-				// Ok pour superadmin
-				if(req.connection.user && req.connection.user.roles.includes(1)) {
-					isRemoveAuthorized = true;
-				}
-
                 log.debug("isRemoveAuthorized", isRemoveAuthorized)
 
                 if(isRemoveAuthorized) {

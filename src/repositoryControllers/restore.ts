@@ -47,11 +47,6 @@ export function restore<UserType extends User, DocType extends Document>(
 				// Vérifie que l'utilisateur a le droit de supprimmer/restaurer ce document
                 let isRestoreAuthorized = await modelDeclaration.permissions.remove(currentDoc, req.connection.user);
 
-                // Ok pour superadmin
-				if(req.connection.user && req.connection.user.roles.includes(1)) {
-					isRestoreAuthorized = true;
-				}
-
                 if(isRestoreAuthorized) {
                     // Archivage du document
                     //@ts-ignore je sais pas pourquoi il y a une erreur...
