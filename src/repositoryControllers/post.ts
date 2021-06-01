@@ -77,46 +77,32 @@ export function post<UserType extends User, DocType extends Document>(
 									}
 								}
 
-								if(newDocObject.organizations) {
-									log.debug("Prevent superadmin role injection.");
+								//////////////////////////////////////////////////////////////////////////////
+								// SAUVEGARDE
+								log.debug("Corrected new doc object", newDocObject)
 
-									// @ts-ignore
-									newDocObject.organizations = newDocObject.organizations.filter(orgaId => req.connection.user?.organizations.includes(orgaId));
+								// Suppression de l'id temporaire et sauvegarde du document
+								const objectWithoutId: any = {...newDocObject};
+								delete objectWithoutId._id;
+								const newDocument = new modelDeclaration.model(objectWithoutId); // On crée le nouveau document mongoose.
+								const savedDocument = await newDocument.save(); // On enregistre le document.
+
+								if(!savedDocument) { // Si le document n'a pas été sauvegardé, une erreur est envoyée.
+									return log.warn(`Erreur lors de la sauvegade d'un document dans ${modelDeclaration.name}/post.`)
 								}
 
-								// Requête refusée sur aucun rôle n'est fourni pour un utilisateur
-								// @ts-ignore
-								if(!newDocObject.roles || newDocObject.roles.length === 0) {
-									return res.reject("Impossible de créer un utilisateur sans rôle.")
-								}
+								log.debug("Document saved !", savedDocument)
+
+								const objectResult: any = {...savedDocument.toObject() }
+
+								log.debug("Attaching old _id to result doc", newDoc)
+
+								objectResult._oldId = newDoc._id
+
+								log.debug("Result document, sent back to client :", objectResult)
+
+								newDocsObjects.push(objectResult); // On ajoute la relation entre l'ancien ID et le nouveau au tableau.
 							}
-
-							//////////////////////////////////////////////////////////////////////////////
-							// SAUVEGARDE
-							log.debug("Corrected new doc object", newDocObject)
-
-
-							// Suppression de l'id temporaire et sauvegarde du document
-							const objectWithoutId: any = {...newDocObject};
-							delete objectWithoutId._id;
-							const newDocument = new modelDeclaration.model(objectWithoutId); // On crée le nouveau document mongoose.
-							const savedDocument = await newDocument.save(); // On enregistre le document.
-
-							if(!savedDocument) { // Si le document n'a pas été sauvegardé, une erreur est envoyée.
-								return log.warn(`Erreur lors de la sauvegade d'un document dans ${modelDeclaration.name}/post.`)
-							}
-
-							log.debug("Document saved !", savedDocument)
-
-							const objectResult: any = {...savedDocument.toObject() }
-
-							log.debug("Attaching old _id to result doc", newDoc)
-
-							objectResult._oldId = newDoc._id
-
-							log.debug("Result document, sent back to client :", objectResult)
-
-							newDocsObjects.push(objectResult); // On ajoute la relation entre l'ancien ID et le nouveau au tableau.
 						}
 					}
 					catch(e) {
