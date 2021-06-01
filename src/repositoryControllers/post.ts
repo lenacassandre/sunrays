@@ -55,7 +55,7 @@ export function post<UserType extends User, DocType extends Document>(
 								delete newDocObject._id
 
 								// /!\ Interdiction de post dans les orga si on est pas superadmin
-								if(modelDeclaration.name === "organization") {
+								if(modelDeclaration.name === "organization" && !req.connection.user?.roles.includes(1)) {
 									log.warn("Post attempt in organization.");
 									return res.reject("Non autorisé.");
 								}
