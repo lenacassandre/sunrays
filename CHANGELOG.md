@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.12](https://github.com/lenacassandre/sunrays/compare/v0.4.11...v0.4.12) (2021-06-02)
+
+
+### Bug Fixes
+
+* **all controllers:** orgas ([3da70dc](https://github.com/lenacassandre/sunrays/commit/3da70dcd8ba1e6438a0888c9ca28421ad656c2b9))
+
 ### [0.4.11](https://github.com/lenacassandre/sunrays/compare/v0.4.10...v0.4.11) (2021-06-02)
 
 
