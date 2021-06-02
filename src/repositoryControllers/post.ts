@@ -77,6 +77,16 @@ export function post<UserType extends User, DocType extends Document>(
 									}
 								}
 
+								// Si l'utilisateur n'est pas superadmin, il ne peut post que dans ses orga
+								if(req.connection.user && !req.connection.user.roles.includes(1)) {
+									newDocObject.organizations ||= [];
+									newDocObject.organizations = newDocObject.organizations.filter(orgaId => req.connection.user?.organizations.includes(orgaId))
+
+									if(newDocObject.organizations.length === 0) {
+										newDocObject.organizations = [...req.connection.user.organizations]
+									}
+								}
+
 								//////////////////////////////////////////////////////////////////////////////
 								// SAUVEGARDE
 								log.debug("Corrected new doc object", newDocObject)
