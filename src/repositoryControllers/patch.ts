@@ -67,11 +67,16 @@ export function patch<UserType extends User, DocType extends Document>(
 								}
 							}
 
-							if(authorizedPatch.organizations) {
+							// Empêche les non superadmin d'injecter des orgas autres que les leurs
+							if(req.connection.user && !req.connection.user.roles.includes(1) && authorizedPatch.organizations) {
 								log.debug("Prevent superadmin role injection.");
 
 								// @ts-ignore
 								authorizedPatch.organizations = authorizedPatch.organizations.filter(orgaId => req.connection.user?.organizations.includes(orgaId));
+
+								if(authorizedPatch.organizations.length === 0) {
+									authorizedPatch.organizations = [...req.connection.user.organizations]
+								}
 							}
 						}
 
