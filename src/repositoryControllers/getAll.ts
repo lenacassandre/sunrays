@@ -43,15 +43,20 @@ export function getAll<UserType extends User, DocType extends Document>(
 			//@ts-ignore
 			queryFilter.archived = {$ne: true};
 
+
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
 			if(req.connection.user && !req.connection.user.roles.includes(1)) {
 				//@ts-ignore
 				queryFilter.organization = {$in: [...(req.connection.user.organization || [])]}
 			}
 
+			log.debug("GET ALL - queryFilter", queryFilter);
+
 			////////////////////////////////////////////////////////////////////////////////////////////////
 			// Demande à mongoose de renvoyer les documents sous la forme d'objets JS purs (lean), avec le query Filter
 			modelDeclaration.model.find(queryFilter).lean<DocType>().exec(async (err: any, docs: DocType[]) => { // On recherche les document demandée par le queryFilter
+				log.debug("GET ALL - found", docs.length, "documents.");
+
 				if(err) { // Si mongosse a envoyé une erreur, la requête a échoué, on renvoi un tableau vide
 					log.error(`Error in ${modelDeclaration.name}/getAll.`, err); // Une erreur inconnue s'est produite.
 					return res.reject("Erreur."); // On retourne un tableau vide
