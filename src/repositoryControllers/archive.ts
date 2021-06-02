@@ -29,10 +29,12 @@ export function archive<UserType extends User, DocType extends Document>(
 
         const queryFilter: FilterQuery<MongooseDocument<DocType>> = {archived: {$ne: true}};
 
-                // Les non superadmin ne peuvent accéder qu'à leur organisation
+        // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(req.connection.user && !req.connection.user.roles.includes(1)) {
+            const orgas = req.connection.user.organizations || [];
+
             //@ts-ignore
-            queryFilter.organization = {$in: [...(req.connection.user.organization || [])]}
+            queryFilter.organizations = {$in: [...orgas]}
         }
 
         // On demande à mongoose tous les documents à archiver
