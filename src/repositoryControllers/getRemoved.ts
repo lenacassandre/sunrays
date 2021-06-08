@@ -45,8 +45,14 @@ export function getRemoved<UserType extends User, DocType extends Document>(
 			if(req.connection.user && !req.connection.user.roles.includes(1)) {
 				const orgas = req.connection.user.organizations || [];
 
-				//@ts-ignore
-				queryFilter.organizations = {$in: [...orgas]}
+				if(modelDeclaration.name === "organization") {
+					//@ts-ignore
+					queryFilter._id = {$in: [...orgas]}
+				}
+				else {
+					//@ts-ignore
+					queryFilter.organizations = {$in: [...orgas]}
+				}
 			}
 
 			////////////////////////////////////////////////////////////////////////////////////////////////
