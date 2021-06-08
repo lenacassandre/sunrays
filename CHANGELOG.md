@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.14](https://github.com/lenacassandre/sunrays/compare/v0.4.13...v0.4.14) (2021-06-08)
+
+
+### Bug Fixes
+
+* **dispatchchanges:** crash ([409991c](https://github.com/lenacassandre/sunrays/commit/409991cbce07ae94faf458495b2c4f12ca640d5c))
+
 ### [0.4.13](https://github.com/lenacassandre/sunrays/compare/v0.4.12...v0.4.13) (2021-06-08)
 
 

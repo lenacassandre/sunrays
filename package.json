@@ -1,6 +1,6 @@
 {
     "name": "sunrays",
-    "version": "0.4.13",
+    "version": "0.4.14",
     "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
     "main": "lib/index.js",
     "module": "./lib/index.js",
