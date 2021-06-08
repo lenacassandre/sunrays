@@ -20,7 +20,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
     getModelsDeclarations: () => ModelDeclaration<UserType, any>[], // La liste de toutes les factories actuellement enregistrées sur l'app.
     authorConnection: Connection<any, UserType>, // L'utilisateur•ice qui a demandé la mutation
     date: Date,
-    repositoryName: string, // La factory qui a été modifiée
+    repositoryName: string, // La factory qui a été sauvegardée
     controllerType: ControllerType, // Type de mutation. Classique ou personnalisé.
     data: RepoControllersReturnTypes<DocType>[ControllerType], // Les données de la mutation
 ) {
@@ -65,8 +65,16 @@ export default async function dispatchChanges<UserType extends User, DocType ext
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(connection.user && !connection.user.roles.includes(1)) {
-            //@ts-ignore
-            queryFilter.organization = {$in: req.connection.user.organization}
+            const orgas = connection.user.organizations || [];
+
+            if(modelDeclaration.name === "organization") {
+                //@ts-ignore
+                queryFilter._id = {$in: [...orgas]}
+            }
+            else {
+                //@ts-ignore
+                queryFilter.organizations = {$in: [...orgas]}
+            }
         }
 
         // @ts-ignore

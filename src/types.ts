@@ -117,9 +117,9 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 */
 	post?: (doc: (Partial<DocType> & {_id: string}), user?: SafeUser<UserType>) => Promise<Partial<DocType> | null>;
 	/**
-	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de modifier les propriétés données d'un document donné.
+	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de sauvegarder les propriétés données d'un document donné.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
-	 * @param currentDoc Le document que l'utilisateur•trice souhaite modifier, dans son état actuel dans la base de données.
+	 * @param currentDoc Le document que l'utilisateur•trice souhaite sauvegarder, dans son état actuel dans la base de données.
 	 * @param patch Les modifications que l'utilisateur•trice souhaite apporter au document.
 	 * @returns Les modifications qui sont acceptées. null si la requête est refusée.
 	 */
