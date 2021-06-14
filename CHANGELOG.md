@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.4.15](https://github.com/lenacassandre/sunrays/compare/v0.4.14...v0.4.15) (2021-06-14)
+
+
+### Features
+
+* forceDestroy ([09e052f](https://github.com/lenacassandre/sunrays/commit/09e052f403a82cab2995c4673dfec36af2307768))
+
 ### [0.4.14](https://github.com/lenacassandre/sunrays/compare/v0.4.13...v0.4.14) (2021-06-08)
 
 
