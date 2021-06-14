@@ -125,7 +125,7 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 */
 	patch?: (currentDoc: DocType, patch: (Partial<DocType> & {_id: string}), user?: SafeUser<UserType>) => Promise<Partial<DocType> | null>;
 	/**
-	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de supprimer un document donné.
+	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de supprimer un document donné. Pour remove, destroy, forceDestroy et restore.
 	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
 	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
 	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
@@ -138,13 +138,6 @@ export declare type Permissions<UserType extends User, DocType extends Document>
 	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
 	 */
 	archive?: (doc: DocType, user?: SafeUser<UserType>) => Promise<true | false | null>;
-	/**
-	 * Fonction qui vérifie qu'un•e utilisateur•ice ait bien le droit de détruire définitivement un document donné.
-	 * @param user L'utilisateur•trice qui a émit la demande. null si l'utilisateur•ice n'est pas connecté•e.
-	 * @param doc Le document que l'utilisateur•trice souhaite supprimmer.
-	 * @returns true si l'utilisateur•ice a le droit de supprimer le document. false ou null si la requête est refusée.
-	 */
-	destroy?: (doc: DocType, user?: SafeUser<UserType>) => Promise<true | false | null>;
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////

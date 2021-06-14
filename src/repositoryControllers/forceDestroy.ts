@@ -11,7 +11,7 @@ import log from "../utils/log";
  * @param modelDeclaration
  * @returns
  */
-export function destroy<UserType extends User, DocType extends Document>(
+export function forceDestroy<UserType extends User, DocType extends Document>(
 	modelDeclaration: ModelDeclaration<UserType, DocType>
 ) {
     return async (
@@ -26,7 +26,7 @@ export function destroy<UserType extends User, DocType extends Document>(
 			// Liste des ids détruits.
 			const destroyedIds: string[] = []
 
-			const queryFilter: FilterQuery<MongooseDocument<DocType>> = {removed: true};
+			const queryFilter: FilterQuery<MongooseDocument<DocType>> = {};
 
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
 			if(req.connection.user && !req.connection.user.roles.includes(1)) {

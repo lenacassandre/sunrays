@@ -279,7 +279,7 @@ class Sun<U extends User> {
 		) {
 			const modelDeclaration = route_or_modelDeclaration;
 
-			log.info(`Adding \x1b[33mrepository controllers\x1b[90m to routes \x1b[33m${modelDeclaration.name}/\x1b[33mgetAll\x1b[31m|\x1b[33mgetArchived\x1b[31m|\x1b[33mgetRemoved\x1b[31m|\x1b[33mpost\x1b[31m|\x1b[33mpatch\x1b[31m|\x1b[33mremove\x1b[31m|\x1b[33marchive\x1b[31m|\x1b[33mdestroy\x1b[90m.`, )
+			log.info(`Adding \x1b[33mrepository controllers\x1b[90m to routes \x1b[33m${modelDeclaration.name}/\x1b[33mgetAll\x1b[31m|\x1b[33mgetArchived\x1b[31m|\x1b[33mgetRemoved\x1b[31m|\x1b[33mpost\x1b[31m|\x1b[33mpatch\x1b[31m|\x1b[33mremove\x1b[31m|\x1b[33marchive\x1b[31m|\x1b[33mdestroy\x1b[31m|\x1b[33mforceDestroy\x1b[90m.`, )
 
 			this.repositories.push(modelDeclaration); // Ajoute le modèle/repositories à la liste
 

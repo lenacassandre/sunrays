@@ -18,6 +18,7 @@ import {getArchives} from './getArchives'
 import {getRemoved} from './getRemoved'
 import {patch} from './patch'
 import {post} from './post'
+import {forceDestroy} from './forceDestroy'
 
 // TODO : factoriser les repository controllers qui comportent beaucoup trop d'étapes redondantes
 
@@ -40,6 +41,7 @@ export default function controlFactory<UserType extends User, DocType extends Do
 	methods[modelDeclaration.name + '/post'] = post(modelDeclaration);
 	methods[modelDeclaration.name + '/patch'] = patch(modelDeclaration);
 	methods[modelDeclaration.name + '/destroy'] = destroy(modelDeclaration);
+	methods[modelDeclaration.name + '/forceDestroy'] = forceDestroy(modelDeclaration);
 
 	return methods
 }
