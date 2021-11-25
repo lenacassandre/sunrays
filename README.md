@@ -1,20 +1,26 @@
-# Introduction 
-TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project. 
+# Sunrays ☀️
 
-# Getting Started
-TODO: Guide users through getting your code up and running on their own system. In this section you can talk about:
-1.	Installation process
-2.	Software dependencies
-3.	Latest releases
-4.	API references
+Sunrays is a back-end oriented Javascript framework for building better and faster business applications, intended to be used with the [Sunflowers🌻 Front-End Javascript library](https://github.com/lenacassandre/sunflowers) for an optimal experience.
 
-# Build and Test
-TODO: Describe and show how to build your code and run the tests. 
+Hello!
 
-# Contribute
-TODO: Explain how other users and developers can contribute to make your code better. 
+This repository contains the Sunrays source code, along with an example project in the `example` folder. The libraries are works in progress, thanks for hanging out while we figure things out and prepare our proper first release!
 
-If you want to learn more about creating good readme files then refer the following [guidelines](https://docs.microsoft.com/en-us/azure/devops/repos/git/create-a-readme?view=azure-devops). You can also seek inspiration from the below readme files:
-- [ASP.NET Core](https://github.com/aspnet/Home)
-- [Visual Studio Code](https://github.com/Microsoft/vscode)
-- [Chakra Core](https://github.com/Microsoft/ChakraCore)
+## Features
+
+The aim is to create a library which will make creating back-ends a much more easier and pleasurable experience.
+
+Features:
+  - Plug 'n play socket.io integration which allows for instant refresh on all instances of the application.
+  - Facilitated management of user roles, .
+  - Easier creation of entities, with automatically generated CRUD routes.
+  - Built-in management of sale points/organisation locations.
+  - Performance focused database queries depending on the user's role[s] and authorized access.
+
+## Documentation
+
+Currently being worked on.
+
+## Using the library
+
+Todo, [@dasporal](https://github.com/dasporal) is working on it!
