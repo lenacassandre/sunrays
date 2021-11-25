@@ -29,7 +29,7 @@ export function patch<UserType extends User, DocType extends Document>(
 			};
 
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
-			if(req.connection.user && !req.connection.user.roles.includes(1)) {
+			if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
 				const orgas = req.connection.user.organizations || [];
 
 				//@ts-ignore
@@ -65,12 +65,12 @@ export function patch<UserType extends User, DocType extends Document>(
 								// @ts-ignore
 								if(authorizedPatch.roles) {
 									// @ts-ignore
-									authorizedPatch.roles = authorizedPatch.roles.filter(r => r !== 1)
+									authorizedPatch.roles = authorizedPatch.roles.filter(r => r !== "superadmin")
 								}
 							}
 
 							// Empêche les non superadmin d'injecter des orgas autres que les leurs
-							if(req.connection.user && !req.connection.user.roles.includes(1) && authorizedPatch.organizations) {
+							if(req.connection.user && !req.connection.user.roles.includes("superadmin") && authorizedPatch.organizations) {
 								log.debug("Prevent superadmin role injection.");
 
 								// @ts-ignore

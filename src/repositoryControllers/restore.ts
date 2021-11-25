@@ -30,7 +30,7 @@ export function restore<UserType extends User, DocType extends Document>(
         const queryFilter: FilterQuery<MongooseDocument<DocType>> = {removed: true};
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
-        if(req.connection.user && !req.connection.user.roles.includes(1)) {
+        if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
             const orgas = req.connection.user.organizations || [];
 
             //@ts-ignore
