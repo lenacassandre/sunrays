@@ -1,8 +1,8 @@
-import Sun from '../../';
+import Sun from 'sunrays';
 import { signup } from './controllers/signup';
 import {User, Organization, Plant} from './models/';
 
-const app = new Sun("mongodb://127.0.0.1:27017/test", 3001,{
+const app = new Sun("mongodb://root:root@127.0.0.1:27017/test?authSource=admin", 3001,{
     cors: {
         origin: "*"
     }
