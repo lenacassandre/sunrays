@@ -64,7 +64,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
         }
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
-        if(connection.user && !connection.user.roles.includes(1)) {
+        if(connection.user && !connection.user.roles.includes("superadmin")) {
             const orgas = connection.user.organizations || [];
 
             if(modelDeclaration.name === "organization") {

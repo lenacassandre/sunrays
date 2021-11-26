@@ -45,7 +45,7 @@ export function getAll<UserType extends User, DocType extends Document>(
 
 
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
-			if(req.connection.user && !req.connection.user.roles.includes(1)) {
+			if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
 				const orgas = req.connection.user.organizations || [];
 
 				if(modelDeclaration.name === "organization") {

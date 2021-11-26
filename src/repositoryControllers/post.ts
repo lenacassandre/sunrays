@@ -55,7 +55,7 @@ export function post<UserType extends User, DocType extends Document>(
 								delete newDocObject._id
 
 								// /!\ Interdiction de post dans les orga si on est pas superadmin
-								if(modelDeclaration.name === "organization" && !req.connection.user?.roles.includes(1)) {
+								if(modelDeclaration.name === "organization" && !req.connection.user?.roles.includes("superadmin")) {
 									log.warn("Post attempt in organization.");
 									return res.reject("Non autorisé.");
 								}
@@ -67,7 +67,7 @@ export function post<UserType extends User, DocType extends Document>(
 										log.debug("Prevent superadmin role injection.");
 
 										// @ts-ignore
-										newDocObject.roles = newDocObject.roles.filter(r => r !== 1);
+										newDocObject.roles = newDocObject.roles.filter(r => r !== "superadmin");
 									}
 
 									// Requête refusée sur aucun rôle n'est fourni pour un utilisateur
@@ -78,7 +78,7 @@ export function post<UserType extends User, DocType extends Document>(
 								}
 
 								// Si l'utilisateur n'est pas superadmin, il ne peut post que dans ses orga
-								if(req.connection.user && !req.connection.user.roles.includes(1)) {
+								if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
 									newDocObject.organizations ||= [];
 									newDocObject.organizations = newDocObject.organizations.filter(orgaId => req.connection.user?.organizations.includes(orgaId))
 
