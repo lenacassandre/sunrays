@@ -110,3 +110,12 @@ dist
 lib
 
 .DS_Store
+
+# Yarn (no Zero-Installs policy)
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
