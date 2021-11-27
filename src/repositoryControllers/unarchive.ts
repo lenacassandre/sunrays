@@ -44,6 +44,7 @@ export function unarchive<UserType extends User, DocType extends Document>(
             .lean<DocType>()
             .exec()
 
+        // @ts-ignore
         for(const currentDoc of docsToPatch) {
             try {
                 // Vérifie que l'utilisateur a le droit d'archiver/désarchiver ce document

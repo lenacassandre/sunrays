@@ -44,6 +44,7 @@ export function archive<UserType extends User, DocType extends Document>(
             .lean<DocType>()
             .exec()
 
+        // @ts-ignore
         for(const currentDoc of docsToPatch) {
             try {
                 let isArchiveAuthorized = await modelDeclaration.permissions.archive(currentDoc, req.connection.user);

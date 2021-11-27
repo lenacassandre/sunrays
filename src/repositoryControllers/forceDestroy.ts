@@ -43,6 +43,7 @@ export function forceDestroy<UserType extends User, DocType extends Document>(
 				.lean<DocType>()
 				.exec()
 
+			// @ts-ignore
 			for(const doc of docsToDelete) {
 				try {
 					let authorizedDelete = await modelDeclaration.permissions.remove(doc, req.connection.user);

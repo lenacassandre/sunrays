@@ -56,7 +56,8 @@ export default async function dispatchChanges<UserType extends User, DocType ext
     const getQueryFilter = async (connection: Connection<any, UserType>) => {
         let queryFilter: FilterQuery<MongooseDocument<DocType>>;
 
-        if(modelDeclaration.permissions.requestFilter)  {
+        if (modelDeclaration.permissions.requestFilter) {
+            // @ts-ignore
             queryFilter = await modelDeclaration.permissions.requestFilter(connection.user);
         }
         else {
@@ -104,6 +105,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
             log.debug("REMOTE CHANGE IDS", ids)
 
             // Get all modified docs
+            // @ts-ignore
             const modifiedDocs: DocType[] = await modelDeclaration.model.find(queryFilter).lean().exec();
 
             log.debug("REMOTE CHANGE modifiedDocs", modifiedDocs)

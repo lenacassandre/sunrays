@@ -47,6 +47,7 @@ export function patch<UserType extends User, DocType extends Document>(
 			// Le tableau de toutes modifications qui ont été acceptées.
 			const patches: (Partial<DocType> & {_id: string})[] = [];
 
+			// @ts-ignore
 			for(const currentDoc of docsToPatch) {
 				const patch = req.body.find(p => p._id === currentDoc._id.toString())
 

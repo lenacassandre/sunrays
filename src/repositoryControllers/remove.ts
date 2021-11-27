@@ -49,6 +49,7 @@ export function remove<UserType extends User, DocType extends Document>(
 
         log.debug("docsToRemove", docsToRemove)
 
+        // @ts-ignore
         for(const currentDoc of docsToRemove) {
             try {
                 log.debug("currentDoc", currentDoc)

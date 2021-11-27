@@ -28,7 +28,8 @@ export function getAll<UserType extends User, DocType extends Document>(
 			let queryFilter: FilterQuery<MongooseDocument<DocType>> = {};
 
 			// Si un requestFilter est déclaré, on le récupère
-			if(modelDeclaration.permissions.requestFilter) {
+			if (modelDeclaration.permissions.requestFilter) {
+				// @ts-ignore
 				queryFilter = await modelDeclaration.permissions.requestFilter(req.connection.user); // Demande un query filter pour accélérer la requête
 			}
 
@@ -61,7 +62,9 @@ export function getAll<UserType extends User, DocType extends Document>(
 			log.debug("GET ALL - queryFilter", queryFilter);
 
 			////////////////////////////////////////////////////////////////////////////////////////////////
+
 			// Demande à mongoose de renvoyer les documents sous la forme d'objets JS purs (lean), avec le query Filter
+			// @ts-ignore
 			modelDeclaration.model.find(queryFilter).lean<DocType>().exec(async (err: any, docs: DocType[]) => { // On recherche les document demandée par le queryFilter
 				log.debug("GET ALL - found", docs.length, "documents.");
 
