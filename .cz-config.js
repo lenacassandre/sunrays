@@ -64,7 +64,12 @@ module.exports = {
   ],
 
   scopeOverrides: {
-    fix: [{ name: 'merge' }, { name: 'style' }, { name: 'test' }, { name: 'hotfix' }],
+      fix: [
+          { name: 'merge' },
+          { name: 'style' },
+          { name: 'test' },
+          { name: 'hotfix' }
+      ],
   },
 
   allowCustomScopes: true,
