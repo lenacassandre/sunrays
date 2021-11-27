@@ -1,6 +1,6 @@
 {
     "name": "sunrays",
-    "version": "0.4.19",
+    "version": "0.4.24",
     "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
     "main": "lib/index.js",
     "module": "./lib/index.js",
@@ -66,17 +66,11 @@
         "@babel/eslint-plugin": "^7.12.1",
         "@babel/preset-env": "^7.11.5",
         "@commitlint/cli": "^15.0.0",
-        "@craco/craco": "^5.6.4",
-        "@fullhuman/postcss-purgecss": "^2.3.0",
-        "@testing-library/user-event": "^7.2.1",
-        "@types/jest": "^26.0.10",
         "@types/node": "^14.11.2",
-        "@types/socket.io-client": "^1.4.33",
         "@typescript-eslint/eslint-plugin": "^4.14.0",
         "@typescript-eslint/parser": "^4.14.0",
         "babel-loader": "^8.1.0",
         "commitizen": "^4.2.4",
-        "commitlint-config-gitmoji": "^2.2.5",
         "cz-customizable": "^6.3.0",
         "eslint": "^7.18.0",
         "eslint-config-prettier": "^7.2.0",
@@ -94,6 +88,6 @@
         }
     },
     "standard-version": {
-        "releaseCommitMessageFormat": "🚚 chore(release): {{currentTag}}"
+        "releaseCommitMessageFormat": "🚀 release: {{currentTag}}"
     }
 }
