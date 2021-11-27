@@ -28,3 +28,9 @@ Currently being worked on.
   - Run `yarn install`
   - Run `yarn watch`
   - You're set! Why not get your hands on the concepts of the library and practice by reading our [getting started guide?](https://github.com/lenacassandre/sunrays/docs/gettingstarted/md)
+
+
+## Contributing
+
+  - yarn commit (= git add . && git commit)
+  - yarn release (= bump relese && git push)
