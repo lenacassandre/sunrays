@@ -14,7 +14,7 @@
         "watch-windows": "del /s /F /Q dist && npm run watch-ts",
         "test": "echo \"Warning: no test specified\"",
         "commit": "tsc -p . && git add . && git cz",
-        "release": "standard-version && git push --follow-tags origin main",
+        "release": "standard-version && git push --follow-tags origin HEAD",
         "npm": "tsc -p . && npm publish",
         "prepare": "husky install"
     },
