@@ -1,6 +1,6 @@
 {
     "name": "sunrays",
-    "version": "0.4.26",
+    "version": "0.4.27",
     "description": "TODO: Give a short introduction of your project. Let this section explain the objectives or the motivation behind this project.",
     "main": "lib/index.js",
     "module": "./lib/index.js",
@@ -14,7 +14,7 @@
         "watch-windows": "del /s /F /Q dist && npm run watch-ts",
         "test": "echo \"Warning: no test specified\"",
         "commit": "tsc -p . && git add . && git cz",
-        "release": "standard-version && git push --follow-tags origin main",
+        "release": "standard-version && git push --follow-tags origin HEAD",
         "npm": "tsc -p . && npm publish",
         "prepare": "husky install"
     },
