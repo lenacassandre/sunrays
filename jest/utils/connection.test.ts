@@ -1,4 +1,4 @@
-import connectToDB from "../src/utils/connectToDB";
+import connectToDB from "../../src/utils/connectToDB";
 
 describe("Connection", () => {
   it("should connect", () => {
