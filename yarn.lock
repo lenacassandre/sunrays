@@ -8059,6 +8059,7 @@ __metadata:
     require-dir: ^1.2.0
     socket.io: ^3.1.1
     standard-version: ^9.3.2
+    true-promise: ^1.0.7
     ts-node: ^8.10.2
     typescript: ^4.5.2
   languageName: unknown
@@ -8240,6 +8241,13 @@ __metadata:
   version: 3.0.1
   resolution: "trim-newlines@npm:3.0.1"
   checksum: b530f3fadf78e570cf3c761fb74fef655beff6b0f84b29209bac6c9622db75ad1417f4a7b5d54c96605dcd72734ad44526fef9f396807b90839449eb543c6206
+  languageName: node
+  linkType: hard
+
+"true-promise@npm:^1.0.7":
+  version: 1.0.7
+  resolution: "true-promise@npm:1.0.7"
+  checksum: 212262833f3142177c662a26e33609bb048b5dacb786b6ab6121460a74d3696bfa06f74c4d88bbac22c3410601927d02c1eeedf04524f15dc62dc8e80a430949
   languageName: node
   linkType: hard
 

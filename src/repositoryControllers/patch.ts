@@ -30,10 +30,12 @@ export function patch<UserType extends User, DocType extends Document>(
 
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
 			if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
-				const orgas = req.connection.user.organizations || [];
-
-				//@ts-ignore
-				queryFilter.organizations = {$in: [...orgas]}
+				if (req.connection.organization) {
+					queryFilter.organizations = req.connection.organization;
+				}
+				else {
+					return res.reject("Erreur organisations.")
+				}
 			}
 
 			const docsIdsToFind = req.body.map(doc => doc._id);

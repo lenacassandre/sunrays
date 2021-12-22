@@ -197,7 +197,7 @@ export function request(route: string, data: any, connection: Connection<any, Us
 				? "☀️"
 				: "☁️"
 		}\x1b[90m ${
-			connection.shortId || "     "
+			connection.shortId || "     "
 		}\x1b[0m\x1b[90m  📦 ${
 			ellipsis(dataSize, 5)
 		}`
@@ -236,7 +236,7 @@ export function response(id: string, success: boolean, responseData?: any, messa
 				pendingRequest.connection.user
 					? "☀️"
 					: "☁️"
-			}\x1b[90m ${pendingRequest.connection.shortId || "     "}\x1b[0m\x1b[0m\x1b[90m${
+			}\x1b[90m ${pendingRequest.connection.shortId || "     "}\x1b[0m\x1b[0m\x1b[90m${
 				responseData
 					? `  📦 ${ellipsis(dataSize, 5)}`
 					: ""

@@ -6,6 +6,7 @@ export default interface User extends Document {
     userName: string;
     password: string;
     roles: string[]; // Une liste de nombre. Le 1 signifie toujours superadmin. Les autres sont arbitraires et à utiliser comme on le souhaite.
+    currentOrganization: string; // ID de l'organisation par défaut à laquelle se connecter.
 }
 
 // Traite une déclaration de Schema de manière à lui ajouter les propriétés propres à Automaton
@@ -14,6 +15,7 @@ export function processUserSchemaDeclaration(schem: {[key: string]: any}) {
         ...processSchemaDeclaration(schem),
         userName: {type: String, required: true},
         password: {type: String, required: false},
-        roles: {type: [String], default: []},
+        roles: { type: [String], default: [] },
+        currentOrganization: { type: String, required: false }
     }
 }

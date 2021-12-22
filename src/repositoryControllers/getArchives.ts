@@ -46,15 +46,13 @@ export function getArchives<UserType extends User, DocType extends Document>(
 
 			// Les non superadmin ne peuvent accéder qu'à leur organisation
 			if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
-				const orgas = req.connection.user.organizations || [];
-
 				if(modelDeclaration.name === "organization") {
 					//@ts-ignore
-					queryFilter._id = {$in: [...orgas]}
+					queryFilter._id = connection.organization
 				}
 				else {
 					//@ts-ignore
-					queryFilter.organizations = {$in: [...orgas]}
+					queryFilter.organizations = connection.organization
 				}
 			}
 

@@ -17,24 +17,25 @@ export function restore<UserType extends User, DocType extends Document>(
     return async (
 		req: Request<UserType, RepoControllersArgumentsTypes<DocType>["restore"]>,
 		res: Response<RepoControllersReturnTypes<DocType>["restore"]>
-	) => {
-        // La liste de tous les documents dont sunrays aura accepté la restauration
-        const restoreIds: string[] = [];
-
+    ) => {
         // Si aucune permission de restauration est donnée. On renvoit une erreur.
         if(!modelDeclaration.permissions.remove) {
-            log.warn("No remove permission given");
             return res.reject("No remove permission given.")
         }
 
+        // La liste de tous les documents dont sunrays aura accepté la restauration
+        const restoreIds: string[] = [];
+
         const queryFilter: FilterQuery<MongooseDocument<DocType>> = {removed: true};
 
-        // Les non superadmin ne peuvent accéder qu'à leur organisation
+       // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
-            const orgas = req.connection.user.organizations || [];
-
-            //@ts-ignore
-            queryFilter.organizations = {$in: [...orgas]}
+            if (req.connection.organization) {
+                queryFilter.organizations = req.connection.organization;
+            }
+            else {
+                return res.reject("Erreur organisations.")
+            }
         }
 
         // On demande à mongoose tous les documents à restaurer

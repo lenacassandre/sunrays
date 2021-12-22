@@ -16,7 +16,6 @@ const getDataType = (controllerType: RepoControllerType) => controllerType === "
  * Ne supporte que les mutations "classiques" (post, patch et delete)
  */
 export default async function dispatchChanges<UserType extends User, DocType extends Document, ControllerType extends RepoControllerType>(
-    getConnections: () => Connection<"socket", UserType>[], // La liste de toutes les connections Socket
     getModelsDeclarations: () => ModelDeclaration<UserType, any>[], // La liste de toutes les factories actuellement enregistrées sur l'app.
     authorConnection: Connection<any, UserType>, // L'utilisateur•ice qui a demandé la mutation
     date: Date,
@@ -24,7 +23,6 @@ export default async function dispatchChanges<UserType extends User, DocType ext
     controllerType: ControllerType, // Type de mutation. Classique ou personnalisé.
     data: RepoControllersReturnTypes<DocType>[ControllerType], // Les données de la mutation
 ) {
-    const connections = getConnections();
     const modelsDeclarations = getModelsDeclarations();
 
     const modelDeclaration = modelsDeclarations.find(md => md.name === repositoryName);
@@ -66,15 +64,13 @@ export default async function dispatchChanges<UserType extends User, DocType ext
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(connection.user && !connection.user.roles.includes("superadmin")) {
-            const orgas = connection.user.organizations || [];
-
             if(modelDeclaration.name === "organization") {
                 //@ts-ignore
-                queryFilter._id = {$in: [...orgas]}
+                queryFilter._id = connection.organization
             }
             else {
                 //@ts-ignore
-                queryFilter.organizations = {$in: [...orgas]}
+                queryFilter.organizations = connection.organization
             }
         }
 
@@ -85,19 +81,14 @@ export default async function dispatchChanges<UserType extends User, DocType ext
     }
 
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    log.debug("REMOTE CHANGES 1")
-
+    ///////////////////////////////////////////////////////////////////////////////////////////////////////////
     // pour les logs
     let count = 0;
 
-    for(const connection of connections) {
-        log.debug("REMOTE CHANGES 2")
+    for(const connection of Connection.all) {
         if(!authorConnection.socket || connection.socket.id !== authorConnection.socket.id) { // On n'envoie pas les données à la connexion qui est à l'origine du dispatch
             /////////////////////////////////////////////////////////////////////////////////////////////////////////////////:::
             // VERIFIE QUE L'UTILISATEUR A ACCES AUX CHANGEMENT QUI VIENNENT D'ETRE EFFECTUES
-            log.debug("REMOTE CHANGES 3")
 
             // TODO : permettre le remoteChanges de destroy. C'est pour l'instant impossible puisque les doc sont suppr avec qu'on fasse le dispatch changes, donc impossible d'utiliser les fonctions de permission. Gros refactor à faire...
             const queryFilter = await getQueryFilter(connection)
@@ -113,7 +104,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
             if(!Array.isArray(modifiedDocs)) break;
 
             // Tableau de données qui sera envoyé à l'utilisateur. Peut être un tableau d'id ou un tableau d'objets
-            const dataToSend: (string | (Partial<DocType> & {_id: string}))[] = []
+            const dataToSend: (string | (Partial<DocType> & { _id: string }))[] = [];
 
             for(const doc of modifiedDocs) {
                 log.debug("REMOTE CHANGE doc", doc)
@@ -143,7 +134,7 @@ export default async function dispatchChanges<UserType extends User, DocType ext
                         log.debug("REMOTE CHANGE dataObject", dataObject)
 
                         // Si l'objet est trouvé
-                        if(dataObject) {
+                        if(dataObject) {
                             for(let key in dataObject) {
                                 log.debug("REMOTE CHANGE key", key)
 

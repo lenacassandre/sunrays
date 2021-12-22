@@ -32,7 +32,6 @@ class Sun<U extends User> {
 	server: http.Server; // HTTP node server
 	app: Express; // Express server
 	io: IOServer; // Socket IO server
-	private connections: Connection<"socket", U>[] = []; // Liste des connections socket actives
 	private controllers: {[route: string] : Method<U, any, any>} = {}; // Liste des routes/controllers
 	private repositories: ModelDeclaration<U, any>[] = []; // Liste des repositories/modèles
 
@@ -104,9 +103,7 @@ class Sun<U extends User> {
 		this.io.on("connection", async (socket: socketIo.Socket) => { // on Socket connection
 			const newConnection = new Connection<"socket", U>("socket", socket); // Nouvelle classe connection pour suivre la connection de l'utilisateur•trice
 
-			this.connections.push(newConnection); // Enregistre la connection
-
-			log.debug("New client", `🦊\x1b[90m ${newConnection.shortId}\x1b[0m`, "connected. Total :", this.connections.length);
+			log.debug("New client", `🦊\x1b[90m ${newConnection.shortId}\x1b[0m`, "connected. Total :", Connection.all.length);
 
 			/////////////////////////////////////////////////////////////////////:
 
@@ -115,8 +112,8 @@ class Sun<U extends User> {
 			}
 
 			socket.on("disconnect", () => { // Déconnexion. On retire le client de la liste des sockets connectées
-				this.connections = this.connections.filter((c) => c.socket.id !== newConnection.socket.id);
-				log.debug("Client", `🦊\x1b[90m ${newConnection.shortId}\x1b[0m`, "disconnected. Total :", this.connections.length);
+				newConnection.close()
+				log.debug("Client", `🦊\x1b[90m ${newConnection.shortId}\x1b[0m`, "disconnected. Total :", Connection.all.length);
 			});
 		});
 	}
@@ -138,7 +135,7 @@ class Sun<U extends User> {
 
 			try {
 				new Promise((resolve, reject) => {
-					try {
+					try {
 						method(
 							{
 								...req,
@@ -149,7 +146,6 @@ class Sun<U extends User> {
 								reject,
 								dispatch: <DocType extends Document, ControllerType extends RepoControllerType>(repositoryName: string, controllerType: ControllerType, data: RepoControllersReturnTypes<DocType>[ControllerType]) =>
 									dispatchChanges<U, DocType, ControllerType>(
-										this.getConnections,
 										this.getRepositories,
 										connection,
 										new Date,
@@ -196,6 +192,7 @@ class Sun<U extends User> {
 	}
 
 	// Make the server listen for this route with HTTP
+	// This method handle every step of HTTP requests, from anthentification, controllers, to responses
 	private httpListen(route: string, controller: Method<U, any, any>) {
 		log.info(`🌐 Listening \x1b[33m${route}\x1b[90m with HTTP.`);
 
@@ -208,7 +205,7 @@ class Sun<U extends User> {
 				const user = await getUserFromToken<U>(token);
 
 				if(user) {
-					connection.connectUser(user);
+					connection.login(user);
 				}
 			}
 
@@ -301,10 +298,6 @@ class Sun<U extends User> {
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////
 	///////////////////////////////////////////////////////////////////////////////////////////////
-
-	public getConnections = () => {
-		return this.connections;
-	}
 
 	public getRepositories = () => {
 		return this.repositories;

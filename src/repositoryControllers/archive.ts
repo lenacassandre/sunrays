@@ -17,24 +17,25 @@ export function archive<UserType extends User, DocType extends Document>(
     return async (
 		req: Request<UserType, RepoControllersArgumentsTypes<DocType>["archive"]>,
 		res: Response<RepoControllersReturnTypes<DocType>["archive"]>
-	) => {
-        // La liste de tous les documents dont sunrays aura accepté l'archivage
-        const archivedIds: string[] = [];
-
+    ) => {
         // Si aucune permission d'archivage est donnée. On renvoit une erreur.
         if(!modelDeclaration.permissions.archive) {
-            log.warn("No archive permission given");
             return res.reject("No archive permission given.")
         }
+
+        // La liste de tous les documents dont sunrays aura accepté l'archivage
+        const archivedIds: string[] = [];
 
         const queryFilter: FilterQuery<MongooseDocument<DocType>> = {archived: {$ne: true}};
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
-            const orgas = req.connection.user.organizations || [];
-
-            //@ts-ignore
-            queryFilter.organizations = {$in: [...orgas]}
+            if (req.connection.organization) {
+                queryFilter.organizations = req.connection.organization;
+            }
+            else {
+                return res.reject("Erreur organisations.")
+            }
         }
 
         // On demande à mongoose tous les documents à archiver

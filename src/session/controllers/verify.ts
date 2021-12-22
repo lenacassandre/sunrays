@@ -5,7 +5,7 @@ import safeUser from "../utils/safeUser";
 
 export default async function verify<UserType extends User>(
 	req: Request<UserType, {token: string}>,
-	res: Response<{user: SafeUser<UserType>}>
+	res: Response<{user: SafeUser<UserType>, organization?: string}>
 ) {
 	try {
 		if(!req.body) return res.reject("Session invalide. Essayez de vous reconnecter.");
@@ -15,9 +15,9 @@ export default async function verify<UserType extends User>(
 		if (user) {
 			const userResult = safeUser<UserType>(user); // On retire le mot de passe du résultat.
 
-			req.connection.connectUser(userResult); // On enregistre l'utilisateur•ice dans la connection socket afin que les controlleurs suivant puissent y accéder rapidement.
+			req.connection.login(userResult); // On enregistre l'utilisateur•ice dans la connection socket afin que les controlleurs suivant puissent y accéder rapidement.
 
-			return res.resolve({user: userResult}); // Envoie de la réponse.
+			return res.resolve({user: userResult, organization: req.connection.organization}); // Envoie de la réponse.
 		} else {
 			return res.reject("Session invalide. Essayez de vous reconnecter.");
 		}

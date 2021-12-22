@@ -18,8 +18,6 @@ export function post<UserType extends User, DocType extends Document>(
 		req: Request<UserType, RepoControllersArgumentsTypes<DocType>["post"]>,
 		res: Response<RepoControllersReturnTypes<DocType>["post"]>
 	) => {
-		log.debug(modelDeclaration.name, "post controller. Data array lenth :", req.body.length)
-
 		if(!modelDeclaration.permissions.post) {
 			return res.reject("No post permission given.")
 		}
@@ -79,12 +77,7 @@ export function post<UserType extends User, DocType extends Document>(
 
 								// Si l'utilisateur n'est pas superadmin, il ne peut post que dans ses orga
 								if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
-									newDocObject.organizations ||= [];
-									newDocObject.organizations = newDocObject.organizations.filter(orgaId => req.connection.user?.organizations.includes(orgaId))
-
-									if(newDocObject.organizations.length === 0) {
-										newDocObject.organizations = [...req.connection.user.organizations]
-									}
+									newDocObject.organizations = req.connection.organization ? [req.connection.organization] : []
 								}
 
 								//////////////////////////////////////////////////////////////////////////////

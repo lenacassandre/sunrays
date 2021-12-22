@@ -11,7 +11,7 @@ import getModel from "../../utils/getModel";
 
 export default async function login<UserType extends User>(
 	req: Request<UserType, { userName: string; password: string }>,
-	res: Response<{token: string; user: SafeUser<UserType>}>
+	res: Response<{ token: string; user: SafeUser<UserType>; organization?: string}>
 ) {
 	try {
 		if(!req.body) return res.reject("Veuilez saisir votre adresse e-mail et votre mot de passe.");
@@ -29,9 +29,9 @@ export default async function login<UserType extends User>(
 
 				if (token) {
 					const userResult: SafeUser<UserType> = safeUser(user); // Sécurise le mot de passe
-					req.connection.connectUser(userResult); // Enregistre la connection sur le runtime du serveur
+					req.connection.login(userResult); // Enregistre la connection sur le runtime du serveur
 
-					return res.resolve({ token, user: userResult }); // Login OK
+					return res.resolve({ token, user: userResult, organization: req.connection.organization }); // Login OK
 				} else {
 					return res.reject("Erreur lors de la création de la session.");
 				}

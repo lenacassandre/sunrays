@@ -17,24 +17,25 @@ export function unarchive<UserType extends User, DocType extends Document>(
     return async (
 		req: Request<UserType, RepoControllersArgumentsTypes<DocType>["unarchive"]>,
 		res: Response<RepoControllersReturnTypes<DocType>["unarchive"]>
-	) => {
-        // La liste de tous les documents dont sunrays aura accepté l'archivage
-        const unarchivedIds: string[] = [];
-
+    ) => {
         // Si aucune permission d'archivage est donnée. On renvoit une erreur.
         if(!modelDeclaration.permissions.archive) {
-            log.warn("No archive permission given");
             return res.reject("No archive permission given.")
         }
+
+        // La liste de tous les documents dont sunrays aura accepté l'archivage
+        const unarchivedIds: string[] = [];
 
         const queryFilter: FilterQuery<MongooseDocument<DocType>> = {archived: true};
 
         // Les non superadmin ne peuvent accéder qu'à leur organisation
         if(req.connection.user && !req.connection.user.roles.includes("superadmin")) {
-            const orgas = req.connection.user.organizations || [];
-
-            //@ts-ignore
-            queryFilter.organizations = {$in: [...orgas]}
+            if (req.connection.organization) {
+                queryFilter.organizations = req.connection.organization;
+            }
+            else {
+                return res.reject("Erreur organisations.")
+            }
         }
 
         // On demande à mongoose tous les documents à désarchiver
